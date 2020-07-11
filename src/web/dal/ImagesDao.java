@@ -26,7 +26,7 @@ public class ImagesDao {
     protected Images genImage(ResultSet rs) throws SQLException {
         SitesDao sitesDao = SitesDao.getInstance();
         CamerasDao camerasDao = CamerasDao.getInstance();
-        Sites site = sitesDao.getSiteById(rs.getInt("SiteId"));
+        Sites site = sitesDao.getSitesBySiteId(rs.getInt("SiteId"));
         Cameras camera = camerasDao.getCameraById(rs.getInt("CameraId"));
         return new Images(rs.getInt("ImageId"),rs.getString("FileName"),
               rs.getString("FileType"),rs.getInt("Size"),site,
@@ -268,5 +268,6 @@ public class ImagesDao {
                 rs.close();
             }
         }
+        return null;
     }
 }
