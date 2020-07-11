@@ -1,10 +1,13 @@
 package web.dal;
 
 import web.model.Researchers;
+import web.model.Sites;
 import web.model.Users;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ResearchersDao extends UsersDao {
@@ -94,4 +97,45 @@ public class ResearchersDao extends UsersDao {
     }
 
 
+    public Researchers getResearchersByUserId(int userId) throws SQLException{
+        String sql = "SELECT UserId, FirstName, LastName, Gender, AcademicPaper, Institute" +
+                " FROM Sites WHERE UserId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+            while (rs.next()){
+                int localuserId = rs.getInt("UserId");
+                String firstName = rs.getString("FirstName");
+                String lastName = rs.getString("LastName");
+                boolean isGender = rs.getBoolean("IsGender");
+                String academicPaper = rs.getString("AcademicPaper");
+                String institute = rs.getString("Institute");
+                
+
+                Researchers researcher = new Researchers(localuserId, firstName, lastName, isGender, academicPaper, institute);
+                return researcher;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return null;
+    }
+    
+    
 }
