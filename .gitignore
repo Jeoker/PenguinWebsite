@@ -25,7 +25,7 @@ hs_err_pid*
 # remove IDE settings
 .settings/
 build/
-PenguinWeb.iml
+*.iml
 .classpath
 .project
 .idea/
