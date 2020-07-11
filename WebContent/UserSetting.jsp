@@ -12,9 +12,12 @@
 </head>
 <body>
 <center>
+<%--message: user change personal information successful or not--%>
     <p>
         <span id="successMessage"><b>${messages.update}</b></span>
     </p>
+
+<%--form: user update their personal information--%>
 <form action="userupdate" method="post">
     <table border="2">
         <input type="hidden" name="userId" value="${sessionScope.user.userId}"/>

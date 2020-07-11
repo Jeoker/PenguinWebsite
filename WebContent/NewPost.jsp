@@ -9,10 +9,14 @@
 </head>
 <body>
 <center>
+<%--message: create post successful or not--%>
     <p>
         <span id="successMessage"><b>${messages.NewPost}</b><b>${messages.upload}</b></span>
     </p>
+
     <h1>upload image</h1>
+
+<%--form: submit picture--%>
     <form method="post" action="upload" enctype="multipart/form-data">
         Choose a file:
         <input type="file" name="uploadFile"/>
@@ -21,6 +25,8 @@
     </form>
 
     <h1>Create a post</h1>
+
+<%--form: submit post information--%>
     <form action="postcreate" method="post">
         <table border="2">
             <tr>
@@ -29,6 +35,7 @@
             </tr>
             <tr>
                 <td>Picture</td>
+                <%--if users upload picture, user can see their image--%>
                 <td>
                     <c:if test="${filePath != null}">
                         <img src="${filePath}" width="100px">

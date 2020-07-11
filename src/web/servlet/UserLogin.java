@@ -43,6 +43,8 @@ public class UserLogin extends HttpServlet {
         String userName = req.getParameter("username");
         String password = req.getParameter("password");
         String status = req.getParameter("status");
+
+        // if username, password or status is empty, login failed
         if(userName == null || userName.trim().isEmpty() ||
                 password == null || password.trim().isEmpty() ||
                 status == null || status.trim().isEmpty()){
@@ -50,14 +52,14 @@ public class UserLogin extends HttpServlet {
         }else {
             try {
                 Users user = new Users(userName,password,Users.Status.valueOf(status));
+                // Verify user identity
                 Users resultUser = usersDao.getUserByUserNamePasswordStatus(user);
                 if (resultUser != null){
                     messages.put("login", "Login Successful");
-                    if(user.getStatus().name().equals("User")){
-                        HttpSession session = req.getSession();
-                        session.setAttribute("user",resultUser);
-                        req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
-                    }
+                    // put user into HttpSession for later using
+                    HttpSession session = req.getSession();
+                    session.setAttribute("user",resultUser);
+                    req.getRequestDispatcher("/index.jsp").forward(req,resp);
                 }else {
                     messages.put("login", "Incorrect UserName Or Password Or Status");
                     req.getRequestDispatcher("/Login.jsp").forward(req,resp);

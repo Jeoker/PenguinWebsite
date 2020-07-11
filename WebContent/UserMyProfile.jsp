@@ -9,11 +9,19 @@
 </head>
 <body>
 <center>
+<%--message: user login successful or not--%>
     <p>
-        <span id="successMessage"><b>${messages.login}</b></span>
+        <span id="successMessage"><b>${messages.NewPost}</b></span>
     </p>
+
+    <h1>MyProfile</h1><br/>
+
+<%--view/update user's personal information--%>
     <div><a href="finduser">User Settings</a></div>
+
+<%--user can create new posts--%>
     <div><a href="postcreate">New Post</a></div>
+
 </center>
 </body>
 </html>

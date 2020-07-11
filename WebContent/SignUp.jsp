@@ -13,6 +13,7 @@
 <body>
 <center>
 <h1>Sign Up</h1>
+<%--form: submit user created information--%>
 <form action="usercreate" method="post">
     <p>
         <label for="username">UserName</label>

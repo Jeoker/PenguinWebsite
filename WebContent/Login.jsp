@@ -12,10 +12,14 @@
 </head>
 <body>
 <center>
+<%--message: login successful or not--%>
     <p>
         <span id="successMessage"><b>${messages.login}</b></span>
     </p>
+
     <h1>Login</h1>
+
+<%--form: submit user login information--%>
     <form action="userlogin" method="post">
         <table border="2">
             <tr>

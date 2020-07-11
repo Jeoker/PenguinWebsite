@@ -41,7 +41,11 @@ public class PostsDao {
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getTitle());
             // Note: for the sake of simplicity, just set Picture to null for now.
-            ps.setNull(2, Types.BLOB);
+            if (post.getPicture() == null || post.getPicture().equals("")){
+                ps.setNull(2, Types.BLOB);
+            }else {
+                ps.setString(2, post.getPicture());
+            }
             ps.setString(3, post.getContent());
             ps.setBoolean(4, post.isPublished());
             ps.setTimestamp(5, new Timestamp(post.getCreated().getTime()));

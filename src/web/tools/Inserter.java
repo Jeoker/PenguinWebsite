@@ -103,7 +103,7 @@ public class Inserter {
                 post1.getCreated(),post1.getUser().getUserId());
 
         // updatePicture
-        post1 = postsDao.updatePicture(post1, "picture1");
+        post1 = postsDao.updatePicture(post1, "image/1.jpg");
         System.out.printf("updatePicture:\n postId:%d title:%s picture:%s content:%s published:%s created:%s userId:%d\n",
                 post1.getPostId(), post1.getTitle(),post1.getPicture(),post1.getContent(),post1.isPublished(),
                 post1.getCreated(),post1.getUser().getUserId());

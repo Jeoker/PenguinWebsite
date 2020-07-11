@@ -39,9 +39,10 @@ public class UserCreate extends HttpServlet {
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
 
-        // Retrieve/Validate username and password.
         String userName = req.getParameter("username");
         String password = req.getParameter("password");
+
+        // if username or password is empty, sign up failed
         if(userName == null || userName.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()){
             messages.put("signUp", "Invalid UserName Or Password");
@@ -50,6 +51,7 @@ public class UserCreate extends HttpServlet {
             String status = req.getParameter("status");
             try {
                 Users user = new Users(userName,password,Users.Status.valueOf(status));
+                // create user
                 usersDao.create(user);
                 messages.put("signUp", "Sign Up Successful");
                 req.getRequestDispatcher("/index.jsp").forward(req,resp);
