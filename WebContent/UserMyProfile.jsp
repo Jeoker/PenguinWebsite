@@ -11,7 +11,7 @@
 <center>
 <%--message: user login successful or not--%>
     <p>
-        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}${messages.deletePost}</b></span>
+        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}${messages.deletePost}${messages.commentDelete}</b></span>
     </p>
 
     <h1>MyProfile</h1><br/>
@@ -50,6 +50,27 @@
             ---------------------------------
         </div>
     </c:forEach>
+
+    <%--user can view their comments--%>
+    <div><a href="findcomment">COMMENTS</a></div>
+    <%--user's comments--%>
+    <div>
+        <c:forEach items="${userComment}" var="comment">
+            <div>
+                <div><c:out value="${comment.user.userName}"/></div>
+                <div><c:out value="${comment.content}"/></div>
+                <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+            </div>
+            <div>
+                    <%--delete comments, user can delete their own comments--%>
+                <form action="commentdelete" method="post">
+                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                    <div><input type="submit" value="Delete"></div>
+                </form>
+            </div>
+            ------------------------------------
+        </c:forEach>
+    </div>
 
 <%--user can view their collections--%>
     <div><a href="findsave">SAVED</a></div>
@@ -96,6 +117,7 @@
             ------------------------------------
         </c:forEach>
     </div>
+
 
 </center>
 </body>
