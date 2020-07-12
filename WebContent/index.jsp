@@ -5,13 +5,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>PenguinWeb</title>
+    <title>Home Page</title>
   </head>
   <body>
   <center>
 <%--message: create user successful or not--%>
     <p>
-      <span id="successMessage"><b>${messages.signUp}${messages.login}${messages.NewPost}</b></span>
+      <span id="successMessage"><b>${messages.signUp}${messages.login}${messages.SavePost}</b></span>
     </p>
 
 <%-- web name--%>
@@ -56,17 +56,34 @@ if they do, they can view their profile or log out--%>
 <%-- users can see all posts--%>
       <c:forEach items="${allPosts}" var="post" >
         <div>
+          <div><c:out value="${post.getUser().getUserName()}" /></div>
           <div><c:out value="${post.getTitle()}" /></div>
           <div><c:out value="${post.getContent()}" /></div>
           <div><c:if test="${post.getPicture() != null}">
             <img src="${post.getPicture()}" width="100px">
           </c:if></div>
           <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+          <%--post's comments--%>
           <div>
             <form action="postcomment" method="post">
               <input type="text" name="postId" value="${post.getPostId()}" hidden>
-              <div><input type="submit" value="comment"></div>
+              <div><input type="submit" value="Comment"></div>
             </form>
+              <%--save post, user cannot save their own posts--%>
+            <c:if test="${post.getUser().getUserId() != sessionScope.user.userId}">
+<%--              <c:choose>--%>
+<%--                <c:when test="">--%>
+<%--                  --%>
+<%--                </c:when>--%>
+<%--                <c:otherwise>--%>
+<%--                  --%>
+<%--                </c:otherwise>--%>
+<%--              </c:choose>--%>
+              <form action="postsave" method="post">
+                <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                <div><input type="submit" value="Save"></div>
+              </form>
+            </c:if>
           </div>
           ---------------------------------
         </div>
