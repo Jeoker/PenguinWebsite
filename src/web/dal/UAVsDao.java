@@ -1,42 +1,43 @@
 package web.dal;
 
-import web.model.*;
+import web.model.Cameras;
+import web.model.Posts;
+import web.model.UAVs;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CamerasDao {
+public class UAVsDao {
     protected ConnectionManager connectionManager;
-    private static CamerasDao instance = null;
-    protected CamerasDao() {
+    private static UAVsDao instance = null;
+    protected UAVsDao() {
         connectionManager = new ConnectionManager();
     }
-    public static CamerasDao getInstance() {
+    public static UAVsDao getInstance() {
         if(instance == null) {
-            instance = new CamerasDao();
+            instance = new UAVsDao();
         }
         return instance;
     }
 
-    protected Cameras genCamera(ResultSet rs) throws SQLException {
-        return new Cameras(rs.getInt("CameraId"),rs.getString("Name"));
+    protected UAVs genUAV(ResultSet rs) throws SQLException {
+        return new UAVs(rs.getInt("UavId"),rs.getString("Model"),
+              new Cameras(rs.getInt("CameraId")),rs.getInt("Weight"));
     }
 
-    /**
-     * Users create camera
-     * @param camera
-     * @return Images
-     * @throws SQLException
-     */
-    public Cameras create(Cameras camera) throws SQLException {
-        String sql = "INSERT INTO Cameras(Name) " +
-              "VALUES(?);";
+    public UAVs create(UAVs uav) throws SQLException {
+        String sql = "insert into UAVs(Model,CameraId,Weight) " +
+              "values(?,?,?);";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, camera.getName());
+            ps.setString(1, uav.getModel());
+            ps.setInt(2, uav.getCamera().getCameraId());
+            ps.setFloat(3, uav.getWeight());
             ps.executeUpdate();
 
             // Retrieve the auto-generated key and set it
@@ -47,8 +48,8 @@ public class CamerasDao {
             } else {
                 throw new SQLException("Unable to retrieve auto-generated key.");
             }
-            camera.setCameraId(id);
-            return camera;
+            uav.setUavId(id);
+            return uav;
         } catch (SQLException e) {
             e.printStackTrace();
             throw e;
@@ -65,20 +66,14 @@ public class CamerasDao {
         }
     }
 
-    /**
-     * User can delete camera
-     * @param camera
-     * @return null
-     * @throws SQLException
-     */
-    public Cameras delete(Cameras camera) throws SQLException {
-        String sql = "DELETE FROM Cameras WHERE CameraId=?;";
+    public UAVs delete(UAVs uav) throws SQLException {
+        String sql = "DELETE FROM UAVs WHERE UavId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, camera.getCameraId());
+            ps.setInt(1, uav.getUavId());
             ps.executeUpdate();
 
             // Return null pointer
@@ -98,11 +93,11 @@ public class CamerasDao {
 
     /**
      * @param id
-     * @return Cameras
+     * @return UAVs
      * @throws SQLException
      */
-    public Cameras getCameraById(int id) throws SQLException {
-        String sql = "SELECT * FROM Cameras WHERE CameraId=?;";
+    public UAVs getUavById(int id) throws SQLException {
+        String sql = "SELECT * FROM UAVs WHERE UavId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -112,7 +107,7 @@ public class CamerasDao {
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if(rs.next()) {
-                return genCamera(rs);
+                return genUAV(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -131,4 +126,39 @@ public class CamerasDao {
         return null;
     }
 
+    /**
+     * @param id
+     * @return UAVs
+     * @throws SQLException
+     */
+    public List<UAVs> getUavByCameraId(int id) throws SQLException {
+        String sql = "SELECT * FROM UAVs WHERE CameraId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            List<UAVs> uavList = new ArrayList<UAVs>();
+            while(rs.next()) {
+                uavList.add(genUAV(rs));
+            }
+            return uavList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+    }
 }

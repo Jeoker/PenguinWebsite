@@ -1,20 +1,20 @@
 USE PenguinWeb;
 
-LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/camera.csv'
+LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/camera.csv'
   INTO TABLE Cameras
   FIELDS TERMINATED BY ',' 
   ENCLOSED BY '"'
   LINES TERMINATED BY '\n'
   IGNORE 0 ROWS;
 
-LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/site.csv'
+LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/site.csv'
   INTO TABLE Sites
   FIELDS TERMINATED BY ',' 
   ENCLOSED BY '"'
   LINES TERMINATED BY '\n'
   IGNORE 0 ROWS;
 
-LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/image.csv'
+LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/image.csv'
   INTO TABLE Images
   FIELDS TERMINATED BY ','
   ENCLOSED BY '"'
@@ -27,7 +27,8 @@ LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/im
   Longitude = NULLIF(@vlongitude,'0'),
   Latitude = NULLIF(@vlatitude,'0');
 
-LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/weather.csv' INTO TABLE Weathers
+LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/weather.csv'
+    INTO TABLE Weathers
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
@@ -40,7 +41,7 @@ LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/we
         WindRun = NULLIF(@vwindRun,'NA'),
         HiSpeed = NULLIF(@vhiSpeed,'NA');
 
-LOAD DATA INFILE '/home/jeoker/Documents/database/project/PenguinWebsite/data/label.csv'
+LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/label.csv'
   INTO TABLE Annotations
   FIELDS TERMINATED BY ',' 
   ENCLOSED BY '"'
@@ -71,7 +72,7 @@ VALUES('XinruiWu','12345','Administrator');
 INSERT INTO Users(UserName,Password,Status)
 VALUES('SanZhang','88888','Researcher');
 INSERT INTO Users(UserName,Password,Status)
-VALUES('SiLi','66666','1992-07-29','Researcher');
+VALUES('SiLi','66666','Researcher');
 
 #INSERT Researchers
 INSERT INTO Researchers(UserId,FirstName,LastName,Gender,institute,AcademicPaper)
@@ -84,15 +85,19 @@ VALUES('1','Heather','Lynch','0','Stony Brook University','Low-temperature fate 
 
 #INSERT Posts
 INSERT INTO Posts(UserId,Title,Content,Published)
-VALUES('1','Which penguin is the most beautiful','Almost all the birds that has been here during the antarctic summer, now find their way north. Only on bird does the oppsite. It moves south, into the interior of this cold place. That is the Emperor Penguin, the largest, tallest and most beautiful of all the penguins.','1');
+VALUES('1','Which penguin is the most beautiful',
+       'Almost all the birds that has been here during the antarctic summer, now find their way north. Only on bird does the oppsite. It moves south, into the interior of this cold place. That is the Emperor Penguin, the largest, tallest and most beautiful of all the penguins.',
+       '1');
 INSERT INTO Posts(UserId,Title,Content,Published)
-VALUES('2','26 types of penguin: The only list you will ever need','Warning: High risk of controversy and/or cuteness. The world penguins are a diverse and interesting bunch. Part of that diversity is the range of species - but where the species line is drawn is difficult to determine, especially in animals that are as closely related as penguins. Taxonomists agree that there are at least 16 penguin species, but there are arguments to be made for up to 22! Whether species, subspecies or colour morphs* - here are the 26 "types" of penguins that walk the earth.','1');
+VALUES('2','26 types of penguin: The only list you will ever need',
+       'Warning: High risk of controversy and/or cuteness. The world penguins are a diverse and interesting bunch. Part of that diversity is the range of species - but where the species line is drawn is difficult to determine, especially in animals that are as closely related as penguins. Taxonomists agree that there are at least 16 penguin species, but there are arguments to be made for up to 22! Whether species, subspecies or colour morphs* - here are the 26 "types" of penguins that walk the earth.',
+       '1');
 
 #INSERT Comments
 INSERT INTO Comments(UserId,PostId,Content)
-VALUES('3','1','Amazing, they are so beautiful!');
+VALUES('3','2','Amazing, they are so beautiful!');
 INSERT INTO Comments(UserId,PostId,Content)
-VALUES('5','1','I like them!!!!');
+VALUES('5','2','I like them!!!!');
 INSERT INTO Comments(UserId,PostId,Content)
 VALUES('3','2','Thankyou for sharing.');
 
@@ -100,7 +105,7 @@ VALUES('3','2','Thankyou for sharing.');
 INSERT INTO Reshares(UserId,CommentId)
 VALUES('5','1');
 INSERT INTO Reshares(UserId,PostId)
-VALUES('5','1');
+VALUES('5','2');
 
 #INSERT Participates
 INSERT INTO Participates(SiteId,ResearcherId)

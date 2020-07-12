@@ -27,7 +27,9 @@ public class InsertKAI {
         
         SitesDao sitesDao = SitesDao.getInstance();
         ParticipatesDao participatesDao = ParticipatesDao.getInstance();
-
+        
+        ModelsDao modelsDao = ModelsDao.getInstance();
+        DetectionsDao detectionsDao = DetectionsDao.getInstance();
         
         
         
@@ -61,6 +63,19 @@ public class InsertKAI {
         // Create Participates
 	    Participates participate1 = new Participates(sites0,researcher1);
 	    participatesDao.create(participate1);
+        
+	    
+	    
+	    
+	    // model
+	    Timestamp currenttTime = new Timestamp(System.currentTimeMillis());
+        Models model1 = new Models("Model1", currenttTime);
+        modelsDao.create(model1);
+        
+        // detection
+        Detections detection1 = new Detections(image1,55,"xxx",model1);
+        detectionsDao.create(detection1);
+        
         
     }
 }
