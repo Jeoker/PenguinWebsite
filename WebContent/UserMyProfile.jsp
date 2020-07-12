@@ -11,7 +11,7 @@
 <center>
 <%--message: user login successful or not--%>
     <p>
-        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}</b></span>
+        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}${messages.deletePost}</b></span>
     </p>
 
     <h1>MyProfile</h1><br/>
@@ -35,19 +35,17 @@
                 <img src="${post.getPicture()}" width="100px">
             </c:if></div>
             <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                <%--post's comments--%>
             <div>
+                <%--post's comments--%>
                 <form action="postcomment" method="post">
                     <input type="text" name="postId" value="${post.getPostId()}" hidden>
                     <div><input type="submit" value="Comment"></div>
                 </form>
-                <%--save post, user cannot save their own posts--%>
-                <c:if test="${post.getUser().getUserId() != sessionScope.user.userId}">
-                    <form action="postsave" method="post">
-                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                        <div><input type="submit" value="Save"></div>
-                    </form>
-                </c:if>
+                <%--delete post, user can delete their own posts--%>
+                <form action="postdelete" method="post">
+                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                    <div><input type="submit" value="Delete"></div>
+                </form>
             </div>
             ---------------------------------
         </div>

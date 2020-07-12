@@ -28,6 +28,10 @@ if they do, they can view their profile or log out--%>
             <%--user my profile--%>
             <div><a href="UserMyProfile.jsp">My Profile</a></div>
           </c:when>
+          <c:when test="${sessionScope.user.status.name().equals('Administrator')}">
+            <%--user my profile--%>
+            <div><a href="AdministratorMyProfile.jsp">My Profile</a></div>
+          </c:when>
         </c:choose>
 
         <%--user log out--%>
@@ -71,14 +75,6 @@ if they do, they can view their profile or log out--%>
             </form>
               <%--save post, user cannot save their own posts--%>
             <c:if test="${post.getUser().getUserId() != sessionScope.user.userId}">
-<%--              <c:choose>--%>
-<%--                <c:when test="">--%>
-<%--                  --%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                  --%>
-<%--                </c:otherwise>--%>
-<%--              </c:choose>--%>
               <form action="postsave" method="post">
                 <input type="text" name="postId" value="${post.getPostId()}" hidden>
                 <div><input type="submit" value="Save"></div>
