@@ -47,9 +47,7 @@ public class InsertKAI {
 	    +" Name: "+sites1.getName()+" Date: "+sites1.getDate());
 	    //sitesDao.delete(sites0);
 	    System.out.println();
-        
-        
-	    
+
 	    
 	    // create researchers
         System.out.println("-------------------------------");
