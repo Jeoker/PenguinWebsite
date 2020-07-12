@@ -28,16 +28,15 @@ public class CamerasDao {
      * @throws SQLException
      */
     public Cameras create(Cameras camera) throws SQLException {
-        String sql = "INSERT INTO Cameras(CameraId,Name) " +
-              "VALUES(?,?);";
+        String sql = "INSERT INTO Cameras(Name) " +
+              "VALUES(?);";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, camera.getCameraId());
-            ps.setString(2, camera.getName());
+            ps.setString(1, camera.getName());
             ps.executeUpdate();
 
             // Retrieve the auto-generated key and set it
