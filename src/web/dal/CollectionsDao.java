@@ -206,6 +206,98 @@ public class CollectionsDao {
     }
 
     /**
+     * Users can get collection by userId and postId
+     * @param user, post
+     * @return collection
+     * @throws SQLException
+     */
+    public Collections getCollectionByUserIdPostId(Users user, Posts post) throws SQLException {
+        String sql =
+                "SELECT CollectionId,UserId,PostId,CommentId " +
+                        "FROM Collections " +
+                        "WHERE UserId=? AND PostId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1,user.getUserId());
+            ps.setInt(2,post.getPostId());
+            rs = ps.executeQuery();
+            CommentsDao commentsDao = CommentsDao.getInstance();
+            while(rs.next()) {
+                int collectionId = rs.getInt("CollectionId");
+                int commentId = rs.getInt("CommentId");
+
+                Comments comment = commentsDao.getCommentById(commentId);
+                Collections collection = new Collections(collectionId, user, post, comment);
+                return collection;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Users can get collection by userId and commentId
+     * @param user, comment
+     * @return collection
+     * @throws SQLException
+     */
+    public Collections getCollectionByUserIdCommentId(Users user, Comments comment) throws SQLException {
+        String sql =
+                "SELECT CollectionId,UserId,PostId,CommentId " +
+                        "FROM Collections " +
+                        "WHERE UserId=? AND CommentId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1,user.getUserId());
+            ps.setInt(2,comment.getCommentId());
+            rs = ps.executeQuery();
+            PostsDao postsDao = PostsDao.getInstance();
+            while(rs.next()) {
+                int collectionId = rs.getInt("CollectionId");
+                int postId = rs.getInt("PostId");
+
+                Posts post = postsDao.getPostByPostId(postId);
+                Collections collection = new Collections(collectionId, user, post, comment);
+                return collection;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Administrator can get all collections
      * @return list of collections
      * @throws SQLException

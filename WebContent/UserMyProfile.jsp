@@ -11,16 +11,93 @@
 <center>
 <%--message: user login successful or not--%>
     <p>
-        <span id="successMessage"><b>${messages.NewPost}</b></span>
+        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}</b></span>
     </p>
 
     <h1>MyProfile</h1><br/>
+
+<%--Home Page--%>
+    <div><a href="index.jsp">Home Page</a></div>
 
 <%--view/update user's personal information--%>
     <div><a href="finduser">User Settings</a></div>
 
 <%--user can create new posts--%>
     <div><a href="postcreate">New Post</a></div>
+
+<%--user can view their posts--%>
+    <div><a href="findpost">POSTS</a></div>
+    <c:forEach items="${userpost}" var="post" >
+        <div>
+            <div><c:out value="${post.getTitle()}" /></div>
+            <div><c:out value="${post.getContent()}" /></div>
+            <div><c:if test="${post.getPicture() != null}">
+                <img src="${post.getPicture()}" width="100px">
+            </c:if></div>
+            <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                <%--post's comments--%>
+            <div>
+                <form action="postcomment" method="post">
+                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                    <div><input type="submit" value="Comment"></div>
+                </form>
+                <%--save post, user cannot save their own posts--%>
+                <c:if test="${post.getUser().getUserId() != sessionScope.user.userId}">
+                    <form action="postsave" method="post">
+                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                        <div><input type="submit" value="Save"></div>
+                    </form>
+                </c:if>
+            </div>
+            ---------------------------------
+        </div>
+    </c:forEach>
+
+<%--user can view their collections--%>
+    <div><a href="findsave">SAVED</a></div>
+<%--saved posts--%>
+    <c:forEach items="${savedPost}" var="post" >
+        <div>
+            <div><c:out value="${post.getTitle()}" /></div>
+            <div><c:out value="${post.getContent()}" /></div>
+            <div><c:if test="${post.getPicture() != null}">
+                <img src="${post.getPicture()}" width="100px">
+            </c:if></div>
+            <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                <%--post's comments--%>
+            <div>
+                <form action="postcomment" method="post">
+                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                    <div><input type="submit" value="Comment"></div>
+                </form>
+                    <%--unsave post--%>
+                <form action="postunsave" method="post">
+                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                    <div><input type="submit" value="Unsave"></div>
+                </form>
+            </div>
+            ---------------------------------
+        </div>
+    </c:forEach>
+
+    <%--saved comments--%>
+    <div>
+        <c:forEach items="${savedComment}" var="comment">
+            <div>
+                <div><c:out value="${comment.user.userName}"/></div>
+                <div><c:out value="${comment.content}"/></div>
+                <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+            </div>
+            <%--unsave comment--%>
+            <div>
+                <form action="commentunsave" method="post">
+                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                    <div><input type="submit" value="Unsave"></div>
+                </form>
+            </div>
+            ------------------------------------
+        </c:forEach>
+    </div>
 
 </center>
 </body>

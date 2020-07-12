@@ -73,7 +73,7 @@ public class PostCreate extends HttpServlet {
             try {
                 postsDao.create(post);
                 messages.put("NewPost","Post Successfully");
-                req.getRequestDispatcher("/index.jsp").forward(req,resp);
+                req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

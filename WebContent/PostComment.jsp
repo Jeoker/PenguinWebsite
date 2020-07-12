@@ -19,7 +19,7 @@
 <div><fmt:formatDate value="${sessionScope.currentPost.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div><br/>
 <%--message: create comment successful or not--%>
 <p>
-    <span id="successMessage"><b>${messages.NewComment}</b></span>
+    <span id="successMessage"><b>${messages.NewComment}${messages.SaveComment}</b></span>
 </p>
 <%--if user has loged in, he can create comments for current post; if not, he should sign up or login to create comments--%>
 <div>
@@ -48,6 +48,14 @@
             <div><c:out value="${comment.user.userName}"/></div>
             <div><c:out value="${comment.content}"/></div>
             <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+        </div>
+        <div>
+            <c:if test="${comment.user.userId != sessionScope.user.userId}">
+                <form action="commentsave" method="post">
+                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                    <div><input type="submit" value="Save"></div>
+                </form>
+            </c:if>
         </div>
         ------------------------------------
     </c:forEach>
