@@ -30,9 +30,9 @@ public class InsertKAI {
         
         ModelsDao modelsDao = ModelsDao.getInstance();
         DetectionsDao detectionsDao = DetectionsDao.getInstance();
-        
-        
-        
+        ImagesDao imagesDao = ImagesDao.getInstance();
+
+
         //kai
 	    /*** Sites.java/SitesDao.java ***/
 	    System.out.println("Test Sites");
@@ -63,17 +63,14 @@ public class InsertKAI {
 	    participatesDao.create(participate1);
         
 	    
-	    
-	    
 	    // model
 	    Timestamp currenttTime = new Timestamp(System.currentTimeMillis());
         Models model1 = new Models("Model1", currenttTime);
         modelsDao.create(model1);
         
         // detection
+        Images image1 = imagesDao.create(new Images(501));
         Detections detection1 = new Detections(image1,55,"xxx",model1);
         detectionsDao.create(detection1);
-        
-        
     }
 }
