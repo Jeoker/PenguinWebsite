@@ -30,7 +30,7 @@ public class CommentsDao {
      * @throws SQLException
      */
     public Comments create(Comments comment) throws SQLException {
-        String sql = "INSERT INTO Comments(Content,Created,UserId,PostId) VALUES(?,?,?,?);";
+        String sql = "INSERT INTO Comments(Content,Created,UserId,PostId,FatherCommentId) VALUES(?,?,?,?,?);";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -41,6 +41,12 @@ public class CommentsDao {
             ps.setTimestamp(2, new Timestamp(comment.getCreated().getTime()));
             ps.setInt(3, comment.getUser().getUserId());
             ps.setInt(4, comment.getPost().getPostId());
+            if (comment.getFatherComment() == null){
+                ps.setNull(5,Types.INTEGER);
+            }else {
+                ps.setInt(5,comment.getFatherComment().getCommentId());
+            }
+
             ps.executeUpdate();
 
             // Retrieve the auto-generated key and set it, so it can be used by the caller.
@@ -145,7 +151,7 @@ public class CommentsDao {
      */
     public Comments getCommentById(int commentId) throws SQLException {
         String sql =
-                "SELECT CommentId,Content,Created,UserId,PostId " +
+                "SELECT CommentId,Content,Created,UserId,PostId,FatherCommentId " +
                 "FROM Comments WHERE CommentId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
@@ -157,17 +163,20 @@ public class CommentsDao {
             rs = ps.executeQuery();
             PostsDao postsDao = PostsDao.getInstance();
             UsersDao usersDao = UsersDao.getInstance();
+            CommentsDao commentsDao = CommentsDao.getInstance();
             if(rs.next()) {
                 int resultCommentId = rs.getInt("CommentId");
                 String content = rs.getString("Content");
                 Date created =  new Date(rs.getTimestamp("Created").getTime());
                 int postId = rs.getInt("PostId");
                 int userId = rs.getInt("UserId");
+                int fatherCommentId = rs.getInt("FatherCommentId");
 
                 Posts post = postsDao.getPostByPostId(postId);
                 Users user = usersDao.getUserFromUserId(userId);
+                Comments fatherComment = commentsDao.getCommentById(fatherCommentId);
                 Comments comment = new Comments(resultCommentId, content,
-                        created, post, user);
+                        created, post, user,fatherComment);
                 return comment;
             }
         } catch (SQLException e) {
@@ -196,7 +205,7 @@ public class CommentsDao {
     public List<Comments> getCommentsByUserId(Users user) throws SQLException {
         List<Comments> Comments = new ArrayList<Comments>();
         String sql =
-                "SELECT CommentId,Content,Created,UserId,PostId " +
+                "SELECT CommentId,Content,Created,UserId,PostId,FatherCommentId " +
                         "FROM Comments WHERE UserId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
@@ -207,14 +216,17 @@ public class CommentsDao {
             ps.setInt(1, user.getUserId());
             rs = ps.executeQuery();
             PostsDao postsDao = PostsDao.getInstance();
+            CommentsDao commentsDao = CommentsDao.getInstance();
             while(rs.next()) {
                 int commentId = rs.getInt("CommentId");
                 String content = rs.getString("Content");
                 Date created =  new Date(rs.getTimestamp("Created").getTime());
                 int postId = rs.getInt("PostId");
+                int fatherCommentId = rs.getInt("FatherCommentId");
 
                 Posts post = postsDao.getPostByPostId(postId);
-                Comments comment = new Comments(commentId, content, created, post, user);
+                Comments fatherComment = commentsDao.getCommentById(fatherCommentId);
+                Comments comment = new Comments(commentId, content, created, post, user,fatherComment);
                 Comments.add(comment);
             }
         } catch (SQLException e) {
@@ -243,7 +255,7 @@ public class CommentsDao {
     public List<Comments> getCommentsByPostId(Posts post) throws SQLException {
         List<Comments> Comments = new ArrayList<Comments>();
         String sql =
-                "SELECT CommentId,Content,Created,UserId,PostId " +
+                "SELECT CommentId,Content,Created,UserId,PostId,FatherCommentId " +
                         "FROM Comments WHERE PostId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
@@ -254,14 +266,71 @@ public class CommentsDao {
             ps.setInt(1, post.getPostId());
             rs = ps.executeQuery();
             UsersDao usersDao = UsersDao.getInstance();
+            CommentsDao commentsDao = CommentsDao.getInstance();
             while(rs.next()) {
                 int commentId = rs.getInt("CommentId");
                 String content = rs.getString("Content");
                 Date created =  new Date(rs.getTimestamp("Created").getTime());
                 int userId = rs.getInt("UserId");
+                int fatherCommentId = rs.getInt("FatherCommentId");
 
                 Users user = usersDao.getUserFromUserId(userId);
-                Comments comment = new Comments(commentId, content, created, post, user);
+                Comments fatherComment = commentsDao.getCommentById(fatherCommentId);
+                Comments comment = new Comments(commentId, content, created, post, user,fatherComment);
+                Comments.add(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return Comments;
+    }
+
+
+    /**
+     * Users can get reply comments by commentId
+     * @param commentId
+     * @return list of comments
+     * @throws SQLException
+     */
+    public List<Comments> getReplyCommentsByFatherCommentId(int commentId) throws SQLException {
+        List<Comments> Comments = new ArrayList<Comments>();
+        String sql =
+                "SELECT CommentId,Content,Created,UserId,PostId,FatherCommentId " +
+                        "FROM Comments WHERE FatherCommentId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, commentId);
+            rs = ps.executeQuery();
+            UsersDao usersDao = UsersDao.getInstance();
+            PostsDao postsDao = PostsDao.getInstance();
+            CommentsDao commentsDao = CommentsDao.getInstance();
+            while(rs.next()) {
+                int resultCommentId = rs.getInt("CommentId");
+                String content = rs.getString("Content");
+                Date created =  new Date(rs.getTimestamp("Created").getTime());
+                int userId = rs.getInt("UserId");
+                int postId = rs.getInt("PostId");
+                int fatherCommentId = rs.getInt("FatherCommentId");
+
+                Users user = usersDao.getUserFromUserId(userId);
+                Posts post = postsDao.getPostByPostId(postId);
+                Comments fatherComment = commentsDao.getCommentById(fatherCommentId);
+                Comments comment = new Comments(resultCommentId, content, created, post, user,fatherComment);
                 Comments.add(comment);
             }
         } catch (SQLException e) {
@@ -288,7 +357,7 @@ public class CommentsDao {
      */
     public List<Comments> getAllComment() throws SQLException{
         List<Comments> Comments = new ArrayList<Comments>();
-        String sql = "SELECT CommentId,Content,Created,UserId,PostId FROM Comments;";
+        String sql = "SELECT CommentId,Content,Created,UserId,PostId,FatherCommentId FROM Comments;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -298,16 +367,19 @@ public class CommentsDao {
             rs = ps.executeQuery();
             UsersDao usersDao = UsersDao.getInstance();
             PostsDao postsDao = PostsDao.getInstance();
+            CommentsDao commentsDao = CommentsDao.getInstance();
             while(rs.next()) {
                 int commentId = rs.getInt("CommentId");
                 String content = rs.getString("Content");
                 Date created =  new Date(rs.getTimestamp("Created").getTime());
                 int postId = rs.getInt("PostId");
                 int userId = rs.getInt("UserId");
+                int fatherCommentId = rs.getInt("FatherCommentId");
 
                 Posts post = postsDao.getPostByPostId(postId);
                 Users user = usersDao.getUserFromUserId(userId);
-                Comments comment = new Comments(commentId, content, created, post, user);
+                Comments fatherComment = commentsDao.getCommentById(fatherCommentId);
+                Comments comment = new Comments(commentId, content, created, post, user,fatherComment);
                 Comments.add(comment);
             }
         } catch (SQLException e) {

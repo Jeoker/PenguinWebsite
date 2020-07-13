@@ -30,9 +30,9 @@ public class InsertKAI {
         
         ModelsDao modelsDao = ModelsDao.getInstance();
         DetectionsDao detectionsDao = DetectionsDao.getInstance();
-        
-        
-        
+        ImagesDao imagesDao = ImagesDao.getInstance();
+
+
         //kai
 	    /*** Sites.java/SitesDao.java ***/
 	    System.out.println("Test Sites");
@@ -48,9 +48,7 @@ public class InsertKAI {
 	    +" Name: "+sites1.getName()+" Date: "+sites1.getDate());
 	    //sitesDao.delete(sites0);
 	    System.out.println();
-        
-        
-	    
+
 	    
 	    // create researchers
         System.out.println("-------------------------------");
@@ -66,8 +64,6 @@ public class InsertKAI {
 	    participatesDao.create(participate1);
         
 	    
-	    
-	    
 	    // model
 	    Timestamp currenttTime = new Timestamp(System.currentTimeMillis());
         Models model1 = new Models("Model1", currenttTime);
@@ -77,9 +73,15 @@ public class InsertKAI {
 
         
         // detection
+<<<<<<< HEAD
         //Detections detection1 = new Detections(image1,55,"xxx",model1);
         //detectionsDao.create(detection1);
         
         
+=======
+        Images image1 = imagesDao.create(new Images(501));
+        Detections detection1 = new Detections(image1,55,"xxx",model1);
+        detectionsDao.create(detection1);
+>>>>>>> d4ec13a1655f5cce74f7183c522af8d40695c49c
     }
 }
