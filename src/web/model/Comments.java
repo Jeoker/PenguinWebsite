@@ -8,24 +8,27 @@ public class Comments {
     protected Date created;
     protected Posts post;
     protected Users user;
+    protected Comments fatherComment;
 
-    public Comments(int commentId, String content, Date created, Posts post, Users user) {
+    public Comments(int commentId, String content, Date created, Posts post, Users user, Comments fatherComment) {
         this.commentId = commentId;
         this.content = content;
         this.created = created;
         this.post = post;
         this.user = user;
+        this.fatherComment = fatherComment;
     }
 
     public Comments(int commentId) {
         this.commentId = commentId;
     }
 
-    public Comments(String content, Date created, Posts post, Users user) {
+    public Comments(String content, Date created, Posts post, Users user, Comments fatherComment) {
         this.content = content;
         this.created = created;
         this.post = post;
         this.user = user;
+        this.fatherComment = fatherComment;
     }
 
     public int getCommentId() {
@@ -66,5 +69,13 @@ public class Comments {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public Comments getFatherComment() {
+        return fatherComment;
+    }
+
+    public void setFatherComment(Comments fatherComment) {
+        this.fatherComment = fatherComment;
     }
 }

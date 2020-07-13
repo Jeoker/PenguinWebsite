@@ -48,7 +48,7 @@ public class CommentCreate extends HttpServlet {
             try {
                 Users user = (Users) session.getAttribute("user");
                 Posts post = postsDao.getPostByPostId(postId);
-                Comments comment = new Comments(content,date,post,user);
+                Comments comment = new Comments(content,date,post,user,null);
                 commentsDao.create(comment);
                 messages.put("NewComment","Comment successfully");
                 List<Comments> commentsList = commentsDao.getCommentsByPostId(post);

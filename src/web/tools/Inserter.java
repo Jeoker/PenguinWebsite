@@ -144,13 +144,13 @@ public class Inserter {
         System.out.println("Test Comments");
         System.out.println("-------------------------------");
 
-        Comments comment1 = new Comments("comment1", date, post1, user1);
+        Comments comment1 = new Comments("comment1", date, post1, user1,null);
         commentsDao.create(comment1);
-        Comments comment2 = new Comments("comment2", date, post1, user2);
+        Comments comment2 = new Comments("comment2", date, post1, user2,null);
         commentsDao.create(comment2);
-        Comments comment3 = new Comments("comment3", date, post1, user3);
+        Comments comment3 = new Comments("comment3", date, post1, user3,comment2);
         commentsDao.create(comment3);
-        Comments comment4 = new Comments("comment4", date, post2, user2);
+        Comments comment4 = new Comments("comment4", date, post2, user2,comment1);
         commentsDao.create(comment4);
         System.out.println("Create comments successful");
 
