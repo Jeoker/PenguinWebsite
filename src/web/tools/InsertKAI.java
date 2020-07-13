@@ -40,6 +40,7 @@ public class InsertKAI {
 	    sitesDao.create(sites0);
 	    System.out.println("Create Recommendation Successfully");
 	    Sites sites1 = sitesDao.getSitesBySiteId(1);
+	    sitesDao.create(sites1);
 	    System.out.println("getSitesByName:\nSiteId: "+sites1.getSiteId()
 	    +" Name: "+sites1.getName()+" Date: "+sites1.getDate());
 	    sitesDao.updateAbout(sites1, "AAA");
@@ -72,9 +73,12 @@ public class InsertKAI {
         Models model1 = new Models("Model1", currenttTime);
         modelsDao.create(model1);
         
+        
+
+        
         // detection
-        Detections detection1 = new Detections(image1,55,"xxx",model1);
-        detectionsDao.create(detection1);
+        //Detections detection1 = new Detections(image1,55,"xxx",model1);
+        //detectionsDao.create(detection1);
         
         
     }

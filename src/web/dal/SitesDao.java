@@ -1,6 +1,10 @@
 package web.dal;
 
+import web.model.Collections;
+import web.model.Comments;
+import web.model.Posts;
 import web.model.Sites;
+import web.model.Users;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -98,25 +102,26 @@ public class SitesDao {
         return null;
     }
 
-    /*
-    public Sites getCompanyByCompanyKey(int companyKey) throws SQLException{
-        String sql = "SELECT CompanyKey, Name, Description" +
-                " FROM Company WHERE CompanyKey = ?;";
+    public List<Sites> getSitesByName(String name) throws SQLException {
+        List<Sites> sites = new ArrayList<Sites>();
+        String sql = "SELECT SiteId, Name, Date" +
+                " FROM Sites WHERE Name = ?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        CompaniesDao companiesDao = CompaniesDao.getInstance();
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, companyKey);
+            ps.setString(1,name);
             rs = ps.executeQuery();
-            while (rs.next()){
-                String name = rs.getString("Name");
-                String description = rs.getString("Description");
+            while(rs.next()) {
+            	int siteId = rs.getInt("SiteId");
+                String resultname = rs.getString("Name");
+                Date date = new Date(rs.getTimestamp("Date").getTime());
 
-                Companies company = new Companies(companyKey, name, description);
-                return company;
+                Sites site = new Sites(siteId, resultname, date);
+                
+                sites.add(site);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,9 +137,8 @@ public class SitesDao {
                 rs.close();
             }
         }
-        return null;
+        return sites;
     }
-    */
     
 
     public Sites updateAbout(Sites site, String newAbout) throws SQLException{
@@ -162,15 +166,18 @@ public class SitesDao {
             }
         }
     }
-
+    
+    
+    
     public Sites delete(Sites site) throws SQLException{
-        String sql = "DELETE FROM Sites WHERE SiteId = ?;";
+        String sql = "DELETE FROM Sites WHERE Name = ? AND Date = ?;";
         Connection connection = null;
         PreparedStatement ps = null;
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, site.getSiteId());
+            ps.setString(1, site.getName());
+            ps.setTimestamp(2, new Timestamp(site.getDate().getTime()));
             ps.executeUpdate();
             return null;
         } catch (SQLException e) {
