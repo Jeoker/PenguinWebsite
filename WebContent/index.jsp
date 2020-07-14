@@ -42,6 +42,10 @@ if they do, they can view their profile or log out--%>
             <%--user my profile--%>
             <div><a href="AdministratorMyProfile.jsp">My Profile</a></div>
           </c:when>
+          <c:when test="${sessionScope.user.status.name().equals('Researcher')}">
+            <%--user my profile--%>
+            <div><a href="ResearcherMyProfile.jsp">My Profile</a></div>
+          </c:when>
         </c:choose>
 
         <%--user log out--%>
