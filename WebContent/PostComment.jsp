@@ -1,4 +1,9 @@
 <%@ page import="web.model.Comments" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="web.model.Collections" %>
+<%@ page import="web.model.Posts" %>
+<%@ page import="web.model.Users" %>
+<%@ page import="web.dal.CollectionsDao" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -9,6 +14,7 @@
     <title>Title</title>
 </head>
 <body>
+<a href="index.jsp">BACK</a>
 <center>
 
 <%--current post information--%>
@@ -49,18 +55,12 @@
 <%--current post's comments information--%>
     <div>
         <c:forEach items="${sessionScope.currentPostComment}" var="comment">
+            <c:set var="allCommentCurrentComment" scope="request" value="${comment}"/>
             <%--get father comments--%>
             <c:if test="${comment.fatherComment == null}">
                 <div><c:out value="${comment.user.userName}"/></div>
                 <div><c:out value="${comment.content}"/></div>
                 <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                <%--user can save other's comment, but they cannot save their own comment--%>
-                <div>
-                    <form action="commentsave" method="post">
-                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
-                        <div><input type="submit" value="Save"></div>
-                    </form>
-                </div>
 
                 <%--user can reply other's comment--%>
                 <div>
@@ -70,9 +70,56 @@
                     </form>
                 </div>
 
+                <%--user can save other's comment--%>
+                <%--save post--%>
+                <%--only if user has login, they can save posts; otherwise they need to login first--%>
+                <c:choose>
+                    <c:when test="${sessionScope.user == null}">
+                        <div>
+                            <form action="commentsave" method="post">
+                                <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                <div><input type="submit" value="Save"></div>
+                            </form>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div>
+                                <%--get save by userId and postId--%>
+                            <%
+                                CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                                Users user = (Users) session.getAttribute("user");
+                                Comments comment = (Comments) request.getAttribute("allCommentCurrentComment");
+                                try {
+                                    Collections collection = collectionsDao.getCollectionByUserIdCommentId(user,comment);
+                                    request.setAttribute("userSave",collection);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+                                <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                            <c:choose>
+                                <c:when test="${userSave == null}">
+                                    <form action="commentsave" method="post">
+                                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                        <div><input type="submit" value="Save"></div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <form action="commentunsave" method="post">
+                                        <input type="text" name="redirect" value="PostComment" hidden>
+                                        <input type="text" name="commentId" value="${userSave.comment.commentId}" hidden>
+                                        <div><input type="submit" value="unSave"></div>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
                 <%--get child comments--%>
                 <div>
                     <c:forEach items="${sessionScope.currentPostComment}" var="childComment">
+                        <c:set var="allChildCommentCurrentComment" scope="request" value="${childComment}"/>
                         <%--iterate child comments--%>
                         <c:if test="${childComment.fatherComment != null}">
                             <c:set var="currentFatherComment" scope="request" value="${comment}"/>
@@ -96,13 +143,6 @@
                                 <div><c:out value="${childComment.user.userName}"/></div>
                                 <div><c:out value="@${childComment.fatherComment.user.userName}: ${childComment.content}"/></div>
                                 <div><fmt:formatDate value="${childComment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                                <%--user can save other's comment--%>
-                                <div>
-                                    <form action="commentsave" method="post">
-                                        <input type="text" name="commentId" value="${childComment.commentId}" hidden>
-                                        <div><input type="submit" value="Save"></div>
-                                    </form>
-                                </div>
                                 <%--user can reply other's comment--%>
                                 <div>
                                     <form action="commentreply" method="get">
@@ -110,6 +150,50 @@
                                         <div><input type="submit" value="Reply"></div>
                                     </form>
                                 </div>
+
+                                <%--user can save other's comment--%>
+                                <c:choose>
+                                    <c:when test="${sessionScope.user == null}">
+                                        <div>
+                                            <form action="commentsave" method="post">
+                                                <input type="text" name="commentId" value="${childComment.commentId}" hidden>
+                                                <div><input type="submit" value="Save"></div>
+                                            </form>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div>
+                                                <%--get save by userId and postId--%>
+                                            <%
+                                                CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                                                Users user = (Users) session.getAttribute("user");
+                                                Comments comment = (Comments) request.getAttribute("allChildCommentCurrentComment");
+                                                try {
+                                                    Collections collection = collectionsDao.getCollectionByUserIdCommentId(user,comment);
+                                                    request.setAttribute("userSave",collection);
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            %>
+                                                <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                                            <c:choose>
+                                                <c:when test="${userSave == null}">
+                                                    <form action="commentsave" method="post">
+                                                        <input type="text" name="commentId" value="${childComment.commentId}" hidden>
+                                                        <div><input type="submit" value="Save"></div>
+                                                    </form>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <form action="commentunsave" method="post">
+                                                        <input type="text" name="redirect" value="PostComment" hidden>
+                                                        <input type="text" name="commentId" value="${userSave.comment.commentId}" hidden>
+                                                        <div><input type="submit" value="unSave"></div>
+                                                    </form>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:if>
                         </c:if>
                     </c:forEach>

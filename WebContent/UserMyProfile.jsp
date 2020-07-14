@@ -111,6 +111,7 @@
             <%--unsave comment--%>
             <div>
                 <form action="commentunsave" method="post">
+                    <input type="text" name="redirect" value="UserMyProfile" hidden>
                     <input type="text" name="commentId" value="${comment.commentId}" hidden>
                     <div><input type="submit" value="Unsave"></div>
                 </form>

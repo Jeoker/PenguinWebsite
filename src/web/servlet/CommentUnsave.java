@@ -37,6 +37,7 @@ public class CommentUnsave extends HttpServlet {
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
 
+        String redirect = req.getParameter("redirect");
         int commentId = Integer.parseInt(req.getParameter("commentId"));
         HttpSession session = req.getSession();
         Users user = (Users) session.getAttribute("user");
@@ -49,7 +50,11 @@ public class CommentUnsave extends HttpServlet {
             }else {
                 messages.put("CommentUnsave","Unsave Comment Failed");
             }
-            req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+            if (redirect.equals("PostComment")){
+                req.getRequestDispatcher("/PostComment.jsp").forward(req,resp);
+            }else if (redirect.equals("UserMyProfile")){
+                req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

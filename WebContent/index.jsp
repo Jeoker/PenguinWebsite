@@ -89,7 +89,7 @@ if they do, they can view their profile or log out--%>
           </c:if></div>
           <div><fmt:formatDate value="${post.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
 
-<%--post's comments--%>
+          <%--post's comments--%>
           <div>
             <form action="postcomment" method="post">
               <input type="text" name="postId" value="${post.postId}" hidden>
@@ -98,7 +98,7 @@ if they do, they can view their profile or log out--%>
           </div>
 
           <%--save post--%>
-          <%--only if user has login, they can like posts; otherwise they need to login first--%>
+          <%--only if user has login, they can save posts; otherwise they need to login first--%>
           <c:choose>
             <c:when test="${sessionScope.user == null}">
               <div>
