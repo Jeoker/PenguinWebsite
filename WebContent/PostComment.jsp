@@ -1,3 +1,4 @@
+<%@ page import="web.model.Comments" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -11,16 +12,19 @@
 <center>
 
 <%--current post information--%>
+<div><c:out value="${sessionScope.currentPost.user.userName}" /></div>
 <div><c:out value="${sessionScope.currentPost.title}" /></div>
 <div><c:out value="${sessionScope.currentPost.content}" /></div>
 <div><c:if test="${sessionScope.currentPost.picture != null}">
     <img src="${sessionScope.currentPost.picture}" width="100px">
 </c:if></div>
 <div><fmt:formatDate value="${sessionScope.currentPost.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div><br/>
+
 <%--message: create comment successful or not--%>
 <p>
     <span id="successMessage"><b>${messages.NewComment}${messages.SaveComment}${messages.createReply}</b></span>
 </p>
+
 <%--if user has loged in, he can create comments for current post; if not, he should sign up or login to create comments--%>
 <div>
     <c:choose>
@@ -41,9 +45,11 @@
         </c:otherwise>
     </c:choose>
 </div><br/>
+
 <%--current post's comments information--%>
     <div>
         <c:forEach items="${sessionScope.currentPostComment}" var="comment">
+            <%--get father comments--%>
             <c:if test="${comment.fatherComment == null}">
                 <div><c:out value="${comment.user.userName}"/></div>
                 <div><c:out value="${comment.content}"/></div>
@@ -55,33 +61,56 @@
                         <div><input type="submit" value="Save"></div>
                     </form>
                 </div>
-                <%--user can reply other's comment, but they cannot save their own comment--%>
+
+                <%--user can reply other's comment--%>
                 <div>
                     <form action="commentreply" method="get">
                         <input type="text" name="commentId" value="${comment.commentId}" hidden>
                         <div><input type="submit" value="Reply"></div>
                     </form>
                 </div>
+
+                <%--get child comments--%>
                 <div>
                     <c:forEach items="${sessionScope.currentPostComment}" var="childComment">
-                        <c:if test="${childComment.fatherComment.commentId == comment.commentId}">
-                            <div><c:out value="${childComment.user.userName}"/></div>
-                            <div><c:out value="@${childComment.fatherComment.user.userName}: ${childComment.content}"/></div>
-                            <div><fmt:formatDate value="${childComment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                            <%--user can save other's comment, but they cannot save their own comment--%>
-                            <div>
-                                <form action="commentsave" method="post">
-                                    <input type="text" name="commentId" value="${childComment.commentId}" hidden>
-                                    <div><input type="submit" value="Save"></div>
-                                </form>
-                            </div>
-                            <%--user can reply other's comment, but they cannot save their own comment--%>
-                            <div>
-                                <form action="commentreply" method="get">
-                                    <input type="text" name="commentId" value="${childComment.commentId}" hidden>
-                                    <div><input type="submit" value="Reply"></div>
-                                </form>
-                            </div>
+                        <%--iterate child comments--%>
+                        <c:if test="${childComment.fatherComment != null}">
+                            <c:set var="currentFatherComment" scope="request" value="${comment}"/>
+                            <c:set var="currentChildComment" scope="request" value="${childComment}"/>
+                            <%
+                                Comments fatherComment = (Comments) request.getAttribute("currentFatherComment");
+                                Comments currentChildComment = (Comments) request.getAttribute("currentChildComment");
+                                boolean isChild = true;
+                                // get father's child comment
+                                while (currentChildComment.getFatherComment().getCommentId() != fatherComment.getCommentId()){
+                                    if(currentChildComment.getFatherComment().getFatherComment() == null){
+                                        isChild = false;
+                                        break;
+                                    }
+                                    currentChildComment = currentChildComment.getFatherComment();
+                                }
+                                request.setAttribute("isChild",isChild);
+                            %>
+
+                            <c:if test="${isChild == true}">
+                                <div><c:out value="${childComment.user.userName}"/></div>
+                                <div><c:out value="@${childComment.fatherComment.user.userName}: ${childComment.content}"/></div>
+                                <div><fmt:formatDate value="${childComment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                                <%--user can save other's comment--%>
+                                <div>
+                                    <form action="commentsave" method="post">
+                                        <input type="text" name="commentId" value="${childComment.commentId}" hidden>
+                                        <div><input type="submit" value="Save"></div>
+                                    </form>
+                                </div>
+                                <%--user can reply other's comment--%>
+                                <div>
+                                    <form action="commentreply" method="get">
+                                        <input type="text" name="commentId" value="${childComment.commentId}" hidden>
+                                        <div><input type="submit" value="Reply"></div>
+                                    </form>
+                                </div>
+                            </c:if>
                         </c:if>
                     </c:forEach>
                 </div>

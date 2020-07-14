@@ -31,17 +31,23 @@ public class CommentReply extends HttpServlet {
         req.setAttribute("messages", messages);
 
         int commentId = Integer.parseInt(req.getParameter("commentId"));
-        try {
-            HttpSession session = req.getSession();
-            Comments comment = commentsDao.getCommentById(commentId);
-            session.setAttribute("currentComment",comment);
+        HttpSession session = req.getSession();
+        Users user = (Users)session.getAttribute("user");
+        if (user == null){
+            req.getRequestDispatcher("/SignUpLogin.jsp").forward(req,resp);
+        }else {
+            try {
 
-            List<Comments> commentsList = new ArrayList<>();
-            commentsList = commentsDao.getReplyCommentsByFatherCommentId(commentId);
-            session.setAttribute("currentReplies",commentsList);
-            req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);
-        } catch (SQLException e) {
-            e.printStackTrace();
+                Comments comment = commentsDao.getCommentById(commentId);
+                session.setAttribute("currentComment",comment);
+
+                List<Comments> commentsList = new ArrayList<>();
+                commentsList = commentsDao.getReplyCommentsByFatherCommentId(commentId);
+                session.setAttribute("currentReplies",commentsList);
+                req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -62,8 +68,10 @@ public class CommentReply extends HttpServlet {
             Comments childComment = new Comments(content,date,comment.getPost(),user,comment);
             Comments resultComment = commentsDao.create(childComment);
             if(resultComment != null){
+                List<Comments> commentsList = commentsDao.getCommentsByPostId(resultComment.getPost());
+                session.setAttribute("currentPostComment",commentsList);
                 messages.put("createReply","Reply Comment Successfully");
-                req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);
+                req.getRequestDispatcher("/PostComment.jsp").forward(req,resp);
             }else {
                 messages.put("createReply","Reply Comment Failed");
                 req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);

@@ -6,6 +6,8 @@
 <%@ page import="web.dal.PostsDao" %>
 <%@ page import="web.model.Posts" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="web.dal.CollectionsDao" %>
+<%@ page import="web.model.Collections" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -77,6 +79,7 @@ if they do, they can view their profile or log out--%>
 
 <%-- users can see all posts--%>
       <c:forEach items="${allPosts}" var="post" >
+        <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
         <div>
           <div><c:out value="${post.user.userName}" /></div>
           <div><c:out value="${post.title}" /></div>
@@ -92,15 +95,53 @@ if they do, they can view their profile or log out--%>
               <input type="text" name="postId" value="${post.postId}" hidden>
               <div><input type="submit" value="Comment"></div>
             </form>
-
-<%--save post, user cannot save their own posts--%>
-            <c:if test="${post.user.userId != sessionScope.user.userId}">
-              <form action="postsave" method="post">
-                <input type="text" name="postId" value="${post.postId}" hidden>
-                <div><input type="submit" value="Save"></div>
-              </form>
-            </c:if>
           </div>
+
+          <%--save post--%>
+          <%--only if user has login, they can like posts; otherwise they need to login first--%>
+          <c:choose>
+            <c:when test="${sessionScope.user == null}">
+              <div>
+                <form action="postsave" method="post">
+                  <input type="text" name="postId" value="${post.postId}" hidden>
+                  <div><input type="submit" value="Save"></div>
+                </form>
+              </div>
+            </c:when>
+            <c:otherwise>
+              <div>
+                <%--get save by userId and postId--%>
+                <%
+                  CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                  Users user = (Users) session.getAttribute("user");
+                  Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                  try {
+                    Collections collection = collectionsDao.getCollectionByUserIdPostId(user,post);
+                    request.setAttribute("userSave",collection);
+                  } catch (SQLException e) {
+                    e.printStackTrace();
+                  }
+                %>
+                <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                <c:choose>
+                  <c:when test="${userSave == null}">
+                    <form action="postsave" method="post">
+                      <input type="text" name="postId" value="${post.postId}" hidden>
+                      <div><input type="submit" value="Save"></div>
+                    </form>
+                  </c:when>
+                  <c:otherwise>
+                    <form action="postunsave" method="post">
+                      <input type="text" name="redirect" value="index" hidden>
+                      <input type="text" name="postId" value="${userSave.post.postId}" hidden>
+                      <div><input type="submit" value="unSave"></div>
+                    </form>
+                  </c:otherwise>
+                </c:choose>
+              </div>
+            </c:otherwise>
+          </c:choose>
+
 
           <%--Like posts--%>
           <%--only if user has login, they can like posts; otherwise they need to login first--%>
@@ -113,8 +154,6 @@ if they do, they can view their profile or log out--%>
             </c:when>
 
             <c:otherwise>
-              <%--get a list of likes by userId--%>
-              <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
               <div>
                 <%
                   LikesDao likesDao = LikesDao.getInstance();

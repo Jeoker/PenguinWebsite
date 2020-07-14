@@ -91,6 +91,7 @@
                 </form>
                     <%--unsave post--%>
                 <form action="postunsave" method="post">
+                    <input type="text" name="redirect" value="UserMyProfile" hidden>
                     <input type="text" name="postId" value="${post.getPostId()}" hidden>
                     <div><input type="submit" value="Unsave"></div>
                 </form>
