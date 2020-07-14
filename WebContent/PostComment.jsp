@@ -1,9 +1,7 @@
-<%@ page import="web.model.Comments" %>
 <%@ page import="java.sql.SQLException" %>
-<%@ page import="web.model.Collections" %>
-<%@ page import="web.model.Posts" %>
-<%@ page import="web.model.Users" %>
 <%@ page import="web.dal.CollectionsDao" %>
+<%@ page import="web.dal.LikesDao" %>
+<%@ page import="web.model.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -84,7 +82,7 @@
                     </c:when>
                     <c:otherwise>
                         <div>
-                                <%--get save by userId and postId--%>
+                            <%--get save by userId and postId--%>
                             <%
                                 CollectionsDao collectionsDao = CollectionsDao.getInstance();
                                 Users user = (Users) session.getAttribute("user");
@@ -96,7 +94,7 @@
                                     e.printStackTrace();
                                 }
                             %>
-                                <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                            <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
                             <c:choose>
                                 <c:when test="${userSave == null}">
                                     <form action="commentsave" method="post">
@@ -109,6 +107,53 @@
                                         <input type="text" name="redirect" value="PostComment" hidden>
                                         <input type="text" name="commentId" value="${userSave.comment.commentId}" hidden>
                                         <div><input type="submit" value="unSave"></div>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
+                <%--Like comments--%>
+                <%--only if user has login, they can like comments; otherwise they need to login first--%>
+                <c:choose>
+                    <c:when test="${sessionScope.user == null}">
+                        <form action="commentlike" method="post">
+                            <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                            <div><input type="submit" value="Like"></div>
+                        </form>
+                    </c:when>
+
+                    <c:otherwise>
+                        <div>
+                            <%
+                                LikesDao likesDao = LikesDao.getInstance();
+                                Users user = (Users) session.getAttribute("user");
+                                try {
+                                    Comments comment = (Comments) request.getAttribute("allCommentCurrentComment");
+                                    // get like by userId and PostId
+                                    Likes like = likesDao.getLikesByUserIdCommentId(user,comment);
+                                    // get the number of likes for this post
+                                    int numberOfLikes = likesDao.getLikeNumberByCommentId(comment.getCommentId());
+                                    request.setAttribute("userLike",like);
+                                    request.setAttribute("numberOfLikes",numberOfLikes);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+
+                                <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                            <c:choose>
+                                <c:when test="${userLike == null}">
+                                    <form action="commentlike" method="post">
+                                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                        <div>${numberOfLikes} people like <input type="submit" value="Like"></div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <form action="commentlikedelete" method="post">
+                                        <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                                        <div>${numberOfLikes} people like <input type="submit" value="unLike"></div>
                                     </form>
                                 </c:otherwise>
                             </c:choose>
@@ -194,6 +239,54 @@
                                         </div>
                                     </c:otherwise>
                                 </c:choose>
+
+                                <%--Like comments--%>
+                                <%--only if user has login, they can like comments; otherwise they need to login first--%>
+                                <c:choose>
+                                    <c:when test="${sessionScope.user == null}">
+                                        <form action="commentlike" method="post">
+                                            <input type="text" name="commentId" value="${childComment.commentId}" hidden>
+                                            <div><input type="submit" value="Like"></div>
+                                        </form>
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        <div>
+                                            <%
+                                                LikesDao likesDao = LikesDao.getInstance();
+                                                Users user = (Users) session.getAttribute("user");
+                                                try {
+                                                    Comments comment = (Comments) request.getAttribute("allChildCommentCurrentComment");
+                                                    // get like by userId and PostId
+                                                    Likes like = likesDao.getLikesByUserIdCommentId(user,comment);
+                                                    // get the number of likes for this post
+                                                    int numberOfLikes = likesDao.getLikeNumberByCommentId(comment.getCommentId());
+                                                    request.setAttribute("userLike",like);
+                                                    request.setAttribute("numberOfLikes",numberOfLikes);
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            %>
+
+                                                <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                                            <c:choose>
+                                                <c:when test="${userLike == null}">
+                                                    <form action="commentlike" method="post">
+                                                        <input type="text" name="commentId" value="${childComment.commentId}" hidden>
+                                                        <div>${numberOfLikes} people like <input type="submit" value="Like"></div>
+                                                    </form>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <form action="commentlikedelete" method="post">
+                                                        <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                                                        <div>${numberOfLikes} people like <input type="submit" value="unLike"></div>
+                                                    </form>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+
                             </c:if>
                         </c:if>
                     </c:forEach>
