@@ -157,7 +157,7 @@ public class LikesDao {
     }
 
     /**
-     * Users can get likes by LikeId
+     * Users can get likes by UserId
      * @param user
      * @return list of likes
      * @throws SQLException
@@ -167,7 +167,7 @@ public class LikesDao {
         String sql =
                 "SELECT LikeId,UserId,PostId,CommentId " +
                         "FROM Likes " +
-                        "WHERE LikeId=?;";
+                        "WHERE UserId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
