@@ -114,44 +114,36 @@ if they do, they can view their profile or log out--%>
 
             <c:otherwise>
               <%--get a list of likes by userId--%>
+              <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
               <div>
                 <%
                   LikesDao likesDao = LikesDao.getInstance();
                   Users user = (Users) session.getAttribute("user");
-                  List<Likes> likesList = null;
                   try {
-                    likesList = likesDao.getLikesByUserId(user);
+                    Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                    // get like by userId and PostId
+                    Likes like = likesDao.getLikesByUserIdPostId(user,post);
+                    // get the number of likes for this post
+                    int numberOfLikes = likesDao.getLikeNumberByPostId(post.getPostId());
+                    request.setAttribute("userLike",like);
+                    request.setAttribute("numberOfLikes",numberOfLikes);
                   } catch (SQLException e) {
                     e.printStackTrace();
                   }
-                  session.setAttribute("userLikes",likesList);
-                  // initial isLike FALSE
-                  request.setAttribute("isLike",false);
                 %>
-                
-                <%--iterate the list of likes, if current postId equal to like's postId, set isLike TRUE--%>
-                <c:forEach items="${sessionScope.userLikes}" var="like">
-                  <c:if test="${post.postId == like.post.postId}">
-                    <%
-                      request.setAttribute("isLike",true);
-                    %>
-                    <c:set var="likeId" scope="request" value="${like.likeId}"/>
-                  </c:if>
-                </c:forEach>
 
-                <%--if isLike is TRUE, it means user has liked this post, so user can cancel this like--%>
-                <%--otherwise, user can like this post--%>
+                <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
                 <c:choose>
-                  <c:when test="${isLike != true}">
+                  <c:when test="${userLike == null}">
                     <form action="postlike" method="post">
                       <input type="text" name="postId" value="${post.postId}" hidden>
-                      <div><input type="submit" value="Like"></div>
+                      <div>${numberOfLikes} people like <input type="submit" value="Like"></div>
                     </form>
                   </c:when>
                   <c:otherwise>
                     <form action="postlikedelete" method="post">
-                      <input type="text" name="likeId" value="${likeId}" hidden>
-                      <div><input type="submit" value="unLike"></div>
+                      <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                      <div>${numberOfLikes} people like <input type="submit" value="unLike"></div>
                     </form>
                   </c:otherwise>
                 </c:choose>

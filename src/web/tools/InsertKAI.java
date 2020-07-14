@@ -68,20 +68,13 @@ public class InsertKAI {
 	    Timestamp currenttTime = new Timestamp(System.currentTimeMillis());
         Models model1 = new Models("Model1", currenttTime);
         modelsDao.create(model1);
-        
-        
 
-        
+
+
+
         // detection
-<<<<<<< HEAD
-        //Detections detection1 = new Detections(image1,55,"xxx",model1);
-        //detectionsDao.create(detection1);
-        
-        
-=======
         Images image1 = imagesDao.create(new Images(501));
         Detections detection1 = new Detections(image1,55,"xxx",model1);
         detectionsDao.create(detection1);
->>>>>>> d4ec13a1655f5cce74f7183c522af8d40695c49c
     }
 }
