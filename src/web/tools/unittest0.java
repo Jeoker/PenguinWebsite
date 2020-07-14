@@ -60,7 +60,7 @@ public class unittest0 {
         imagePrinter(imagesDao.getImageByClosestTime(
                                 Timestamp.valueOf("2015-12-23 10:10:10")));
 
-        List<Images> imageList = imagesDao.getImageBySite(new Sites(4));
+        List<Images> imageList = imagesDao.getImageBySite(4);
         System.out.println("Get Images by Site:");
         for (Images item:imageList)
             imagePrinter(item);

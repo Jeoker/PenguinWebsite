@@ -195,11 +195,11 @@ public class ImagesDao {
 
     /**
      * Users can get comments by userId
-     * @param site
+     * @param siteId
      * @return list of Images
      * @throws SQLException
      */
-    public List<Images> getImageBySite(Sites site) throws SQLException {
+    public List<Images> getImageBySite(int siteId) throws SQLException {
         List<Images> images = new ArrayList<Images>();
         String sql =
               "SELECT ImageId,FileName,FileType,SiteId,Size,MediaLink,TimeStamp," +
@@ -211,7 +211,7 @@ public class ImagesDao {
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, site.getSiteId());
+            ps.setInt(1, siteId);
             rs = ps.executeQuery();
             while(rs.next()) {
                 images.add(genImage(rs));
