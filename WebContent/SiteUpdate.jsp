@@ -22,7 +22,7 @@
 			<input id="name" name="name" value="">
 		</p>
 		<p>
-			<input type="submit">
+			<input type="submit" value="site update">
 		</p>
 	</form>
 	<br/><br/>
