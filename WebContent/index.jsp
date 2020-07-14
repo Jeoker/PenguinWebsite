@@ -1,3 +1,13 @@
+<%@ page import="web.model.Likes" %>
+<%@ page import="java.util.List" %>
+<%@ page import="web.dal.LikesDao" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="web.model.Users" %>
+<%@ page import="web.dal.PostsDao" %>
+<%@ page import="web.model.Posts" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="web.dal.CollectionsDao" %>
+<%@ page import="web.model.Collections" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -55,32 +65,131 @@ if they do, they can view their profile or log out--%>
 
 
   <h1>Post</h1>
-    <div><a href="allpost">Post</a></div><br/>
+<%--all posts--%>
+  <%
+    PostsDao postsDao = PostsDao.getInstance();
+    List<Posts> postsList = new ArrayList<>();
+    try {
+      postsList = postsDao.getAllPost();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    request.setAttribute("allPosts", postsList);
+  %>
 
 <%-- users can see all posts--%>
       <c:forEach items="${allPosts}" var="post" >
+        <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
         <div>
-          <div><c:out value="${post.getUser().getUserName()}" /></div>
-          <div><c:out value="${post.getTitle()}" /></div>
-          <div><c:out value="${post.getContent()}" /></div>
-          <div><c:if test="${post.getPicture() != null}">
-            <img src="${post.getPicture()}" width="100px">
+          <div><c:out value="${post.user.userName}" /></div>
+          <div><c:out value="${post.title}" /></div>
+          <div><c:out value="${post.content}" /></div>
+          <div><c:if test="${post.picture != null}">
+            <img src="${post.picture}" width="100px">
           </c:if></div>
-          <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-          <%--post's comments--%>
+          <div><fmt:formatDate value="${post.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+
+<%--post's comments--%>
           <div>
             <form action="postcomment" method="post">
-              <input type="text" name="postId" value="${post.getPostId()}" hidden>
+              <input type="text" name="postId" value="${post.postId}" hidden>
               <div><input type="submit" value="Comment"></div>
             </form>
-              <%--save post, user cannot save their own posts--%>
-            <c:if test="${post.getUser().getUserId() != sessionScope.user.userId}">
-              <form action="postsave" method="post">
-                <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                <div><input type="submit" value="Save"></div>
-              </form>
-            </c:if>
           </div>
+
+          <%--save post--%>
+          <%--only if user has login, they can like posts; otherwise they need to login first--%>
+          <c:choose>
+            <c:when test="${sessionScope.user == null}">
+              <div>
+                <form action="postsave" method="post">
+                  <input type="text" name="postId" value="${post.postId}" hidden>
+                  <div><input type="submit" value="Save"></div>
+                </form>
+              </div>
+            </c:when>
+            <c:otherwise>
+              <div>
+                <%--get save by userId and postId--%>
+                <%
+                  CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                  Users user = (Users) session.getAttribute("user");
+                  Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                  try {
+                    Collections collection = collectionsDao.getCollectionByUserIdPostId(user,post);
+                    request.setAttribute("userSave",collection);
+                  } catch (SQLException e) {
+                    e.printStackTrace();
+                  }
+                %>
+                <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                <c:choose>
+                  <c:when test="${userSave == null}">
+                    <form action="postsave" method="post">
+                      <input type="text" name="postId" value="${post.postId}" hidden>
+                      <div><input type="submit" value="Save"></div>
+                    </form>
+                  </c:when>
+                  <c:otherwise>
+                    <form action="postunsave" method="post">
+                      <input type="text" name="redirect" value="index" hidden>
+                      <input type="text" name="postId" value="${userSave.post.postId}" hidden>
+                      <div><input type="submit" value="unSave"></div>
+                    </form>
+                  </c:otherwise>
+                </c:choose>
+              </div>
+            </c:otherwise>
+          </c:choose>
+
+
+          <%--Like posts--%>
+          <%--only if user has login, they can like posts; otherwise they need to login first--%>
+          <c:choose>
+            <c:when test="${sessionScope.user == null}">
+              <form action="postlike" method="post">
+                <input type="text" name="postId" value="${post.postId}" hidden>
+                <div><input type="submit" value="Like"></div>
+              </form>
+            </c:when>
+
+            <c:otherwise>
+              <div>
+                <%
+                  LikesDao likesDao = LikesDao.getInstance();
+                  Users user = (Users) session.getAttribute("user");
+                  try {
+                    Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                    // get like by userId and PostId
+                    Likes like = likesDao.getLikesByUserIdPostId(user,post);
+                    // get the number of likes for this post
+                    int numberOfLikes = likesDao.getLikeNumberByPostId(post.getPostId());
+                    request.setAttribute("userLike",like);
+                    request.setAttribute("numberOfLikes",numberOfLikes);
+                  } catch (SQLException e) {
+                    e.printStackTrace();
+                  }
+                %>
+
+                <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                <c:choose>
+                  <c:when test="${userLike == null}">
+                    <form action="postlike" method="post">
+                      <input type="text" name="postId" value="${post.postId}" hidden>
+                      <div>${numberOfLikes} people like <input type="submit" value="Like"></div>
+                    </form>
+                  </c:when>
+                  <c:otherwise>
+                    <form action="postlikedelete" method="post">
+                      <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                      <div>${numberOfLikes} people like <input type="submit" value="unLike"></div>
+                    </form>
+                  </c:otherwise>
+                </c:choose>
+              </div>
+            </c:otherwise>
+          </c:choose>
+
           ---------------------------------
         </div>
       </c:forEach>

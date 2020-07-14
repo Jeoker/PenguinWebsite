@@ -28,13 +28,6 @@
                 <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
             </div>
         </c:forEach>
-<%--        <c:if test="${sessionScope.currentReply != null}">--%>
-<%--            <div>--%>
-<%--                <div><c:out value="${sessionScope.currentReply.user.userName}"/></div>--%>
-<%--                <div>@<c:out value="${sessionScope.currentReply.fatherComment.user.userName}: ${sessionScope.currentReply.content}"/></div>--%>
-<%--                <div><fmt:formatDate value="${sessionScope.currentReply.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>--%>
-<%--            </div>--%>
-<%--        </c:if>--%>
     </div><br/>
     ------------------------------------
 
