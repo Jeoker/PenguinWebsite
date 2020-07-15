@@ -46,6 +46,12 @@
                     <input type="text" name="postId" value="${post.getPostId()}" hidden>
                     <div><input type="submit" value="Delete"></div>
                 </form>
+                        <%--delete post, user can delete their own posts--%>
+                    <form action="postupdate" method="post">
+                        Input new content: <input type="text" name="newContent" value="">
+                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                        <div><input type="submit" value="Update"></div>
+                    </form>
             </div>
         </div>
     </c:forEach>
