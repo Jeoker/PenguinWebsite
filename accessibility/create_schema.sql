@@ -291,27 +291,6 @@ CREATE TABLE IF NOT EXISTS `PenguinWeb`.`Models` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `PenguinWeb`.`Annotations`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `PenguinWeb`.`Annotations` ;
-
-CREATE TABLE IF NOT EXISTS `PenguinWeb`.`Annotations` (
-  `AnnotationId` INT NOT NULL AUTO_INCREMENT,
-  `Name` VARCHAR(45) NULL,
-  `FileType` ENUM("shp", "json", "xml", "dbf", "prj", "cpg", "shx") NOT NULL,
-  `SiteId` INT NULL,
-  `PathOnCloud` VARCHAR(100) NOT NULL,
-  `Criteria` ENUM("withChick", "withoutChick") NOT NULL,
-  PRIMARY KEY (`AnnotationId`),
-  INDEX `Annotation_Site_idx` (`SiteId` ASC) VISIBLE,
-  CONSTRAINT `Annotation_Site_fk`
-    FOREIGN KEY (`SiteId`)
-    REFERENCES `PenguinWeb`.`Sites` (`SiteId`)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `PenguinWeb`.`Detections`
