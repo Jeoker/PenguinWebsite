@@ -28,7 +28,7 @@
 <%--user can view their posts--%>
     <div><a href="findpost">POSTS</a></div>
     <c:forEach items="${userpost}" var="post" >
-        <div>
+        <div style="background-color: antiquewhite">
             <div><c:out value="${post.getTitle()}" /></div>
             <div><c:out value="${post.getContent()}" /></div>
             <div><c:if test="${post.getPicture() != null}">
@@ -47,7 +47,6 @@
                     <div><input type="submit" value="Delete"></div>
                 </form>
             </div>
-            ---------------------------------
         </div>
     </c:forEach>
 
@@ -56,19 +55,20 @@
     <%--user's comments--%>
     <div>
         <c:forEach items="${userComment}" var="comment">
-            <div>
-                <div><c:out value="${comment.user.userName}"/></div>
-                <div><c:out value="${comment.content}"/></div>
-                <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+            <div style="background-color: antiquewhite">
+                <div>
+                    <div><c:out value="${comment.user.userName}"/></div>
+                    <div><c:out value="${comment.content}"/></div>
+                    <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                </div>
+                <div>
+                        <%--delete comments, user can delete their own comments--%>
+                    <form action="commentdelete" method="post">
+                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                        <div><input type="submit" value="Delete"></div>
+                    </form>
+                </div>
             </div>
-            <div>
-                    <%--delete comments, user can delete their own comments--%>
-                <form action="commentdelete" method="post">
-                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
-                    <div><input type="submit" value="Delete"></div>
-                </form>
-            </div>
-            ------------------------------------
         </c:forEach>
     </div>
 
@@ -76,7 +76,7 @@
     <div><a href="findsave">SAVED</a></div>
 <%--saved posts--%>
     <c:forEach items="${savedPost}" var="post" >
-        <div>
+        <div style="background-color: antiquewhite">
             <div><c:out value="${post.getTitle()}" /></div>
             <div><c:out value="${post.getContent()}" /></div>
             <div><c:if test="${post.getPicture() != null}">
@@ -96,27 +96,27 @@
                     <div><input type="submit" value="Unsave"></div>
                 </form>
             </div>
-            ---------------------------------
         </div>
     </c:forEach>
 
     <%--saved comments--%>
     <div>
         <c:forEach items="${savedComment}" var="comment">
-            <div>
-                <div><c:out value="${comment.user.userName}"/></div>
-                <div><c:out value="${comment.content}"/></div>
-                <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+            <div style="background-color: antiquewhite">
+                <div>
+                    <div><c:out value="${comment.user.userName}"/></div>
+                    <div><c:out value="${comment.content}"/></div>
+                    <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                </div>
+                    <%--unsave comment--%>
+                <div>
+                    <form action="commentunsave" method="post">
+                        <input type="text" name="redirect" value="UserMyProfile" hidden>
+                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                        <div><input type="submit" value="Unsave"></div>
+                    </form>
+                </div>
             </div>
-            <%--unsave comment--%>
-            <div>
-                <form action="commentunsave" method="post">
-                    <input type="text" name="redirect" value="UserMyProfile" hidden>
-                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
-                    <div><input type="submit" value="Unsave"></div>
-                </form>
-            </div>
-            ------------------------------------
         </c:forEach>
     </div>
 
