@@ -18,7 +18,9 @@
     </p>
     <%--Home Page--%>
     <div><a href="index.jsp">Home Page</a></div><br/>
-
+	<%--Site--%>
+    <div><a href="findsites">Management Site</a></div><br/>
+    
     <%--View/Delete Users--%>
     <div><a href="findusers">View Users</a></div><br/>
     <div>
