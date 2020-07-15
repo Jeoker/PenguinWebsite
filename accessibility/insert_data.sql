@@ -41,13 +41,6 @@ LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/weather.csv'
         WindRun = NULLIF(@vwindRun,'NA'),
         HiSpeed = NULLIF(@vhiSpeed,'NA');
 
-LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/label.csv'
-  INTO TABLE Annotations
-  FIELDS TERMINATED BY ',' 
-  ENCLOSED BY '"'
-  LINES TERMINATED BY '\n'
-  IGNORE 0 ROWS;
-
 
 
 insert into UAVs(Model,CameraId,Weight)
