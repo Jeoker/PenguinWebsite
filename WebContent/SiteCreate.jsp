@@ -22,7 +22,7 @@
 			<input id="date" name="date" value="">
 		</p>
 		<p>
-			<input type="submit">
+			<input type="submit" value="site create">
 		</p>
 	</form>
 	<br/><br/>

@@ -157,6 +157,78 @@ public class LikesDao {
     }
 
     /**
+     * Administrator can get the number of likes by postId
+     * @param postId
+     * @return like
+     * @throws SQLException
+     */
+    public int getLikeNumberByPostId(int postId) throws SQLException {
+        String sql = "SELECT COUNT(*) AS numberOfLikes FROM Likes WHERE PostId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, postId);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                return rs.getInt("numberOfLikes");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Administrator can get the number of likes by commentId
+     * @param commentId
+     * @return like
+     * @throws SQLException
+     */
+    public int getLikeNumberByCommentId(int commentId) throws SQLException {
+        String sql = "SELECT COUNT(*) AS numberOfLikes FROM Likes WHERE CommentId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, commentId);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                return rs.getInt("numberOfLikes");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Users can get likes by UserId
      * @param user
      * @return list of likes
@@ -203,6 +275,98 @@ public class LikesDao {
             }
         }
         return likes;
+    }
+
+    /**
+     * Users can get likes by UserId
+     * @param user
+     * @return list of likes
+     * @throws SQLException
+     */
+    public Likes getLikesByUserIdPostId(Users user, Posts post) throws SQLException {
+        String sql =
+                "SELECT LikeId,UserId,PostId,CommentId " +
+                        "FROM Likes " +
+                        "WHERE UserId=? AND PostId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1,user.getUserId());
+            ps.setInt(2,post.getPostId());
+            rs = ps.executeQuery();
+            CommentsDao commentsDao = CommentsDao.getInstance();
+            while(rs.next()) {
+                int likeId = rs.getInt("LikeId");
+                int commentId = rs.getInt("CommentId");
+
+                Comments comment = commentsDao.getCommentById(commentId);
+                Likes like = new Likes(likeId, user, post, comment);
+                return like;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Users can get likes by UserId and CommentId
+     * @param user
+     * @return list of likes
+     * @throws SQLException
+     */
+    public Likes getLikesByUserIdCommentId(Users user, Comments comment) throws SQLException {
+        String sql =
+                "SELECT LikeId,UserId,PostId,CommentId " +
+                        "FROM Likes " +
+                        "WHERE UserId=? AND CommentId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1,user.getUserId());
+            ps.setInt(2,comment.getCommentId());
+            rs = ps.executeQuery();
+            PostsDao postsDao = PostsDao.getInstance();
+            while(rs.next()) {
+                int likeId = rs.getInt("LikeId");
+                int postId = rs.getInt("PostId");
+
+                Posts post = postsDao.getPostByPostId(postId);
+                Likes like = new Likes(likeId, user, post, comment);
+                return like;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return null;
     }
 
     /**

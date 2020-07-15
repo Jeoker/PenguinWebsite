@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `PenguinWeb`.`Comments` (
     `Created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     `UserId` INT NULL,
     `PostId` INT NULL,
+    `FatherCommentId` INT NULL,
     PRIMARY KEY (`CommentId`),
     INDEX `Comments_Users1_idx` (`UserId` ASC) VISIBLE,
     INDEX `Comments_Posts1_idx` (`PostId` ASC) VISIBLE,
@@ -395,3 +396,12 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO Users(UserName, Password, Status)
+VALUES('na','123','Administrator');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('user1','123','User');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('user2','123','User');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('user3','123','User');
