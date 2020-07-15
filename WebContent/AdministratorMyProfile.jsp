@@ -46,6 +46,39 @@
         </table>
     </div>
 
+    <%--View/Delete Posts--%>
+    <div><a href="findposts">View Posts</a></div><br/>
+    <div>
+        <table border="1">
+            <c:if test="${allPosts != null}">
+                <tr>
+                    <td>PostId</td>
+                    <td>Title</td>
+                    <td>Picture</td>
+                    <td>Content</td>
+                    <td>Published</td>
+                    <td>Created</td>
+                    <td>UserName</td>
+                    <td>Delete User</td>
+                </tr>
+            </c:if>
+            <c:forEach items="${allPosts}" var="post">
+                <tr>
+                    <td><c:out value="${post.getPostId()}"/></td>
+                    <td><c:out value="${post.getTitle()}"/></td>
+                    <td><c:if test="${post.getPicture() != null}">
+                        <img src="${post.getPicture()}" width="100px">
+                    </c:if></td>
+                    <td><c:out value="${post.getContent()}"/></td>
+                    <td><c:out value="${post.isPublished()}"/></td>
+                    <td><c:out value="${post.getCreated()}"/></td>
+                    <td><c:out value="${post.getUser().getUserName()}"/></td>
+                    <td><a href="postdelete?postId=${post.getPostId()}">DELETE</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+
 
 </center>
 </body>
