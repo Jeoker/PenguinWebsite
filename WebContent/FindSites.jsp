@@ -18,7 +18,7 @@
 			<input id="name" name="name" value="${fn:escapeXml(param.name)}">
 		</p>
 		<p>
-			<input type="submit">
+			<input type="submit" value="find site">
 			<br/><br/><br/>
 			<span id="successMessage"><b>${messages.success}</b></span>
 		</p>
