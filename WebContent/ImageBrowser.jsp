@@ -25,7 +25,7 @@
     <div><a href="UploadNewImage">Upload</a></div><br/>
 
     <c:forEach items="${siteImages}" var="image" >
-        <c:if test="${image.getImageId() < 0}">
+<%--        <c:if test="${image.getImageId() < 0}">--%>
         <div>
             <div><c:out value="${image.getFileName()}" /></div>
             <div><c:out value="${image.getFileType()}" /></div>
@@ -33,18 +33,19 @@
             <div><fmt:formatDate value="${image.getTimestamp()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
             <div><c:if test="${image.getMediaLink() != null}">
                 <img src="${image.getMediaLink()}" width="300px">
-            </c:if></div>
+            </c:if>
+            </div>
             <div>
                 <form action="imagedelete" method="post">
                     <input type="text" name="imageId" value="${image.getImageId()}" hidden>
                     <div><input type="submit" value="delete"></div>
                 </form>
-                <form action="imagedelete" method="post">
+                <form action="updateimage" method="get">
                     <input type="text" name="imageId" value="${image.getImageId()}" hidden>
                     <div><input type="submit" value="update"></div>
                 </form>
             </div>
-        </c:if>
+<%--        </c:if>--%>
         </div>
     </c:forEach>
 

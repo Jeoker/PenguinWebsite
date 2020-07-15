@@ -60,6 +60,9 @@ if they do, they can view their profile or log out--%>
   </div>
 
 
+  <h1>Test Section</h1><br/>
+  <div><a href="imagesFromSite">allImages</a></div><br/>
+
 
 
   <h1>Post</h1>

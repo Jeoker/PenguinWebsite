@@ -11,6 +11,9 @@
     <title>Upload New Image</title>
 </head>
 <body>
+    <p>
+        <span id="successMessage"><b>${messages.success}</b></span>
+    </p>
     <form action="UploadNewImage" method="post">
         <p>
             <label for="name">Name</label>
@@ -26,7 +29,7 @@
         </p>
         <p>
             <label for="site">site</label>
-            <input id="site" name="path" value="">
+            <input id="site" name="site" value="">
         </p>
         <p>
             <input type="submit">

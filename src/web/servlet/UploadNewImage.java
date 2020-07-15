@@ -13,10 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,14 +43,19 @@ public class UploadNewImage extends HttpServlet {
         req.setAttribute("messages", messages);
 
         String name = req.getParameter("name");
+        System.out.println(name);
         if (name == null || name.trim().isEmpty()) {
             messages.put("success", "Invalid Name");
         } else {
             // Create the BlogUser.
             String type = req.getParameter("type");
+            System.out.println(type);
             String path = req.getParameter("path");
-            int siteId = Integer.valueOf(req.getParameter("site"));
+            System.out.println(path);
+            int siteId = Integer.parseInt(req.getParameter("site"));
+            System.out.println(siteId);
             Timestamp time = new Timestamp(System.currentTimeMillis());
+            System.out.println(time);
             try {
                 // Exercise: parse the input for StatusLevel.
                 Images image = new Images(name, type, 2, new Sites(siteId),
