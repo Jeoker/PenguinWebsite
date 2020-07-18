@@ -48,10 +48,16 @@ public class PostUnsave extends HttpServlet {
             }else {
                 messages.put("PostUnsave","Unsave Post Failed");
             }
-            if (redirect.equals("index")){
-                req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            }else if (redirect.equals("UserMyProfile")){
-                req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+            switch (redirect) {
+                case "index":
+                    req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                    break;
+                case "UserMyProfile":
+                    req.getRequestDispatcher("/UserMyProfile.jsp").forward(req, resp);
+                    break;
+                case "PostComment":
+                    req.getRequestDispatcher("/PostComment.jsp").forward(req, resp);
+                    break;
             }
 
         } catch (SQLException e) {

@@ -35,6 +35,7 @@ public class PostSave extends HttpServlet {
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
 
+        String redirect = req.getParameter("redirect");
         int postId = Integer.parseInt(req.getParameter("postId"));
         HttpSession session = req.getSession();
         Users user = (Users) session.getAttribute("user");
@@ -47,7 +48,17 @@ public class PostSave extends HttpServlet {
                 Collections collection = new Collections(user,post,null);
                 collectionsDao.create(collection);
                 messages.put("SavePost","Post Save Successful");
-                req.getRequestDispatcher("/index.jsp").forward(req,resp);
+                switch (redirect) {
+                    case "index":
+                        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                        break;
+                    case "UserMyProfile":
+                        req.getRequestDispatcher("/UserMyProfile.jsp").forward(req, resp);
+                        break;
+                    case "PostComment":
+                        req.getRequestDispatcher("/PostComment.jsp").forward(req, resp);
+                        break;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

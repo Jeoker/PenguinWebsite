@@ -39,7 +39,7 @@ if they do, they can view their profile or log out--%>
           <c:choose>
             <c:when test="${sessionScope.user.status.name().equals('User')}">
               <%--user my profile--%>
-              <a href="UserMyProfile.jsp" class="btn btn-primary" role="button" style="width: 120px;height: 50px">My Profile</a>
+              <a href="UserMyProfile.jsp" class="btn btn-primary" role="button" style="width: 120px;height: 50px;margin-left: 20px">My Profile</a>
             </c:when>
             <c:when test="${sessionScope.user.status.name().equals('Administrator')}">
               <%--user my profile--%>
@@ -53,16 +53,16 @@ if they do, they can view their profile or log out--%>
 
             <%--user log out--%>
             <form action="userlogout" method="post" style="float: left">
-              <input type="submit" value="Log Out" class="btn btn-info" style="width: 120px;height: 50px">
+              <input type="submit" value="Log Out" class="btn btn-info" style="width: 120px;height: 50px;margin-left: 20px">
             </form>
         </div>
       </c:when>
       <c:otherwise>
           <div>
             <%-- user login--%>
-            <a href="userlogin" class="btn btn-info" role="button" style="width: 120px">LOG IN</a>
+            <a href="userlogin" class="btn btn-info" role="button" style="width: 120px;margin-left: 20px">LOG IN</a>
             <%--create user--%>
-            <a href="usercreate" class="btn btn-primary" role="button" style="width: 120px">SIGN UP</a>
+            <a href="usercreate" class="btn btn-primary" role="button" style="width: 120px;margin-left: 20px">SIGN UP</a>
           </div>
 
       </c:otherwise>
@@ -132,6 +132,7 @@ if they do, they can view their profile or log out--%>
                     <c:when test="${sessionScope.user == null}">
                       <div>
                         <form action="postsave" method="post">
+                          <input type="text" name="redirect" value="index" hidden>
                           <input type="text" name="postId" value="${post.postId}" hidden>
                           <div><input type="submit" value="Save" class="btn btn-secondary"></div>
                         </form>
@@ -155,6 +156,7 @@ if they do, they can view their profile or log out--%>
                         <c:choose>
                           <c:when test="${userSave == null}">
                             <form action="postsave" method="post">
+                              <input type="text" name="redirect" value="index" hidden>
                               <input type="text" name="postId" value="${post.postId}" hidden>
                               <div><input type="submit" value="Save" class="btn btn-secondary"></div>
                             </form>
@@ -174,43 +176,53 @@ if they do, they can view their profile or log out--%>
               </td>
               <td>
                   <%--Like posts--%>
-                  <%--only if user has login, they can like posts; otherwise they need to login first--%>
+                    <%
+                      // get the number of likes for this post
+                      LikesDao likesDao = LikesDao.getInstance();
+                      try {
+                        Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                        int numberOfLikes = likesDao.getLikeNumberByPostId(post.getPostId());
+                        request.setAttribute("numberOfLikes",numberOfLikes);
+                      } catch (SQLException e) {
+                        e.printStackTrace();
+                      }
+                    %>
                 <c:choose>
+                  <%--only if user has login, they can like posts; otherwise they need to login first--%>
                   <c:when test="${sessionScope.user == null}">
                     <form action="postlike" method="post">
+                      <input type="text" name="redirect" value="index" hidden>
                       <input type="text" name="postId" value="${post.postId}" hidden>
-                      <div><input type="submit" value="Like" class="btn btn-secondary"></div>
+                      <div><input type="submit" value="${numberOfLikes} Like" class="btn btn-secondary"></div>
                     </form>
                   </c:when>
 
                   <c:otherwise>
+                    <%
+                      // get like by userId and PostId
+                      Users user = (Users) session.getAttribute("user");
+                      Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                      Likes like = null;
+                      try {
+                        like = likesDao.getLikesByUserIdPostId(user,post);
+                      } catch (SQLException e) {
+                        e.printStackTrace();
+                      }
+                      request.setAttribute("userLike",like);
+                    %>
                     <div>
-                      <%
-                        LikesDao likesDao = LikesDao.getInstance();
-                        Users user = (Users) session.getAttribute("user");
-                        try {
-                          Posts post = (Posts) request.getAttribute("allPostCurrentPost");
-                          // get like by userId and PostId
-                          Likes like = likesDao.getLikesByUserIdPostId(user,post);
-                          // get the number of likes for this post
-                          int numberOfLikes = likesDao.getLikeNumberByPostId(post.getPostId());
-                          request.setAttribute("userLike",like);
-                          request.setAttribute("numberOfLikes",numberOfLikes);
-                        } catch (SQLException e) {
-                          e.printStackTrace();
-                        }
-                      %>
-
                         <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
                       <c:choose>
                         <c:when test="${userLike == null}">
                           <form action="postlike" method="post">
+                            <input type="text" name="redirect" value="index" hidden>
                             <input type="text" name="postId" value="${post.postId}" hidden>
                             <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
                           </form>
                         </c:when>
                         <c:otherwise>
                           <form action="postlikedelete" method="post">
+                            <input type="text" name="redirect" value="index" hidden>
                             <input type="text" name="likeId" value="${userLike.likeId}" hidden>
                             <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
                           </form>

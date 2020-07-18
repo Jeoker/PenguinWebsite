@@ -34,6 +34,7 @@ public class PostLike extends HttpServlet {
         HttpSession session = req.getSession();
         Users user = (Users) session.getAttribute("user");
 
+        String redirect = req.getParameter("redirect");
         // if user login, they can like posts; otherwise, they need to sign up or login first
         if (user == null){
             req.getRequestDispatcher("/SignUpLogin.jsp").forward(req,resp);
@@ -42,7 +43,17 @@ public class PostLike extends HttpServlet {
                 Posts post = postsDao.getPostByPostId(postId);
                 Likes like = new Likes(user,post,null);
                 likesDao.create(like);
-                req.getRequestDispatcher("/index.jsp").forward(req,resp);
+                switch (redirect) {
+                    case "index":
+                        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                        break;
+                    case "UserMyProfile":
+                        req.getRequestDispatcher("/UserMyProfile.jsp").forward(req, resp);
+                        break;
+                    case "PostComment":
+                        req.getRequestDispatcher("/PostComment.jsp").forward(req, resp);
+                        break;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
