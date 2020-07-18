@@ -8,70 +8,74 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="web.dal.CollectionsDao" %>
 <%@ page import="web.model.Collections" %>
+<%@ page import="web.dal.CommentsDao" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
   <head>
     <title>Home Page</title>
   </head>
   <body>
-  <center>
 <%--message: create user successful or not--%>
-    <p>
-      <span id="successMessage"><b>${messages.signUp}${messages.login}${messages.SavePost}</b></span>
-    </p>
-
-<%-- web name--%>
-  <h1>PenguinWeb</h1><br/>
+<%--    <p>--%>
+<%--      <span id="successMessage"><b>${messages.signUp}${messages.login}${messages.SavePost}</b></span>--%>
+<%--    </p>--%>
 
 <%--if user has not signed up or loged in, they can sign up or login;
 if they do, they can view their profile or log out--%>
-  <div style="background-color: aliceblue">
+  <div class="navbar" style="background-color: white">
+    <%-- web name--%>
+    <h1>PenguinWeb</h1>
     <c:choose>
       <c:when test="${sessionScope.user != null}">
-        <%--according to user's different status, choose different myprofile--%>
-        <c:choose>
-          <c:when test="${sessionScope.user.status.name().equals('User')}">
-            <%--user my profile--%>
-            <div><a href="UserMyProfile.jsp">My Profile</a></div>
-          </c:when>
-          <c:when test="${sessionScope.user.status.name().equals('Administrator')}">
-            <%--user my profile--%>
-            <div><a href="AdministratorMyProfile.jsp">My Profile</a></div>
-          </c:when>
-          <c:when test="${sessionScope.user.status.name().equals('Researcher')}">
-            <%--user my profile--%>
-            <div><a href="ResearcherMyProfile.jsp">My Profile</a></div>
-          </c:when>
-        </c:choose>
-
-        <%--user log out--%>
         <div>
-          <form action="userlogout" method="post">
-            <input type="submit" value="Log Out">
-          </form>
+
+            <%--according to user's different status, choose different myprofile--%>
+          <c:choose>
+            <c:when test="${sessionScope.user.status.name().equals('User')}">
+              <%--user my profile--%>
+              <a href="UserMyProfile.jsp" class="btn btn-primary" role="button" style="width: 120px;height: 50px">My Profile</a>
+            </c:when>
+            <c:when test="${sessionScope.user.status.name().equals('Administrator')}">
+              <%--user my profile--%>
+              <a href="AdministratorMyProfile.jsp" class="btn btn-primary btn-lg active" role="button">My Profile</a>
+            </c:when>
+            <c:when test="${sessionScope.user.status.name().equals('Researcher')}">
+              <%--user my profile--%>
+              <a href="ResearcherMyProfile.jsp" class="btn btn-primary btn-lg active" role="button">My Profile</a>
+            </c:when>
+          </c:choose>
+
+            <%--user log out--%>
+            <form action="userlogout" method="post" style="float: left">
+              <input type="submit" value="Log Out" class="btn btn-info" style="width: 120px;height: 50px">
+            </form>
         </div>
       </c:when>
       <c:otherwise>
-        <%--create user--%>
-        <div><a href="usercreate">SIGN UP</a></div>
+          <div>
+            <%-- user login--%>
+            <a href="userlogin" class="btn btn-info" role="button" style="width: 120px">LOG IN</a>
+            <%--create user--%>
+            <a href="usercreate" class="btn btn-primary" role="button" style="width: 120px">SIGN UP</a>
+          </div>
 
-        <%-- user login--%>
-        <div><a href="userlogin">LOG IN</a></div>
       </c:otherwise>
     </c:choose>
   </div>
 
 
-  <h1>Test Section</h1><br/>
-  <div><a href="imagesFromSite">allImages</a></div><br/>
+  <h1 align="center">Test Section</h1><br/>
+  <div align="center"><a href="imagesFromSite">allImages</a></div><br/>
 
 
 
-  <div><h1>Post</h1></div>
+  <div align="center"><h1>Post</h1></div>
 <%--all posts--%>
   <%
     PostsDao postsDao = PostsDao.getInstance();
@@ -87,23 +91,36 @@ if they do, they can view their profile or log out--%>
 <%-- users can see all posts--%>
       <c:forEach items="${allPosts}" var="post" >
         <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
-        <div style="background-color: antiquewhite">
-          <div><c:out value="${post.user.userName}" /></div>
-          <div><c:out value="${post.title}" /></div>
-          <div><c:out value="${post.content}" /></div>
-          <div><c:if test="${post.picture != null}">
-            <img src="${post.picture}" width="100px">
+        <div class="post" style="background-color: white">
+          <div class="smallWord">
+            <c:out value="${post.user.userName}" />
+            Posted by <fmt:formatDate value="${post.created}" pattern="MM-dd-yyyy HH:mm:ss"/>
+          </div>
+          <div class="bigWord"><c:out value="${post.title}" /></div>
+          <div class="middleWord"><c:out value="${post.content}" /></div>
+          <div align="center"><c:if test="${post.picture != null}">
+            <img src="${post.picture}" width="500px" height="250px">
           </c:if></div>
-          <div><fmt:formatDate value="${post.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-
+          <br/>
           <table>
             <tr>
               <td>
                   <%--post's comments--%>
+                    <%
+                      CommentsDao commentsDao = CommentsDao.getInstance();
+                      try {
+                        Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                        // get the number of likes for this post
+                        int numberOfComments = commentsDao.getCommentNumberByPostId(post.getPostId());
+                        request.setAttribute("numberOfComments",numberOfComments);
+                      } catch (SQLException e) {
+                        e.printStackTrace();
+                      }
+                    %>
                 <div>
                   <form action="postcomment" method="post">
                     <input type="text" name="postId" value="${post.postId}" hidden>
-                    <div><input type="submit" value="Comment"></div>
+                    <div><input type="submit" value="${numberOfComments} Comments" class="btn btn-secondary"></div>
                   </form>
                 </div>
               </td>
@@ -116,7 +133,7 @@ if they do, they can view their profile or log out--%>
                       <div>
                         <form action="postsave" method="post">
                           <input type="text" name="postId" value="${post.postId}" hidden>
-                          <div><input type="submit" value="Save"></div>
+                          <div><input type="submit" value="Save" class="btn btn-secondary"></div>
                         </form>
                       </div>
                     </c:when>
@@ -139,14 +156,14 @@ if they do, they can view their profile or log out--%>
                           <c:when test="${userSave == null}">
                             <form action="postsave" method="post">
                               <input type="text" name="postId" value="${post.postId}" hidden>
-                              <div><input type="submit" value="Save"></div>
+                              <div><input type="submit" value="Save" class="btn btn-secondary"></div>
                             </form>
                           </c:when>
                           <c:otherwise>
                             <form action="postunsave" method="post">
                               <input type="text" name="redirect" value="index" hidden>
                               <input type="text" name="postId" value="${userSave.post.postId}" hidden>
-                              <div><input type="submit" value="unSave"></div>
+                              <div><input type="submit" value="unSave" class="btn btn-primary"></div>
                             </form>
                           </c:otherwise>
                         </c:choose>
@@ -162,7 +179,7 @@ if they do, they can view their profile or log out--%>
                   <c:when test="${sessionScope.user == null}">
                     <form action="postlike" method="post">
                       <input type="text" name="postId" value="${post.postId}" hidden>
-                      <div><input type="submit" value="Like"></div>
+                      <div><input type="submit" value="Like" class="btn btn-secondary"></div>
                     </form>
                   </c:when>
 
@@ -189,13 +206,13 @@ if they do, they can view their profile or log out--%>
                         <c:when test="${userLike == null}">
                           <form action="postlike" method="post">
                             <input type="text" name="postId" value="${post.postId}" hidden>
-                            <div>${numberOfLikes} people like <input type="submit" value="Like"></div>
+                            <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
                           </form>
                         </c:when>
                         <c:otherwise>
                           <form action="postlikedelete" method="post">
                             <input type="text" name="likeId" value="${userLike.likeId}" hidden>
-                            <div>${numberOfLikes} people like <input type="submit" value="unLike"></div>
+                            <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
                           </form>
                         </c:otherwise>
                       </c:choose>
@@ -208,6 +225,5 @@ if they do, they can view their profile or log out--%>
         </div><br/>
       </c:forEach>
 
-  </center>
   </body>
 </html>

@@ -197,6 +197,42 @@ public class CommentsDao {
     }
 
     /**
+     * get number of comments by postId
+     * @param postId
+     * @return
+     * @throws SQLException
+     */
+    public int getCommentNumberByPostId(int postId) throws SQLException {
+        String sql = "SELECT COUNT(*) AS numberOfComments FROM Comments WHERE PostId=?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, postId);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                return rs.getInt("numberOfComments");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Users can get comments by userId
      * @param user
      * @return list of comments

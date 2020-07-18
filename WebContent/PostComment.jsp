@@ -55,7 +55,7 @@
 <%--current post's comments information--%>
     <div>
         <c:forEach items="${sessionScope.currentPostComment}" var="comment">
-            <div style="background-color: antiquewhite">
+            <div style="background-color: chocolate">
             <c:set var="allCommentCurrentComment" scope="request" value="${comment}"/>
             <%--get father comments--%>
             <c:if test="${comment.fatherComment == null}">
@@ -173,7 +173,7 @@
                 </table>
 
                 <%--get child comments--%>
-                <div>
+                <div style="background-color: antiquewhite">
                     <c:forEach items="${sessionScope.currentPostComment}" var="childComment">
                         <c:set var="allChildCommentCurrentComment" scope="request" value="${childComment}"/>
                         <%--iterate child comments--%>

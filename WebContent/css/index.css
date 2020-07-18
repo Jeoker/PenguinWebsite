@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #DAE0E6;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.post {
+    margin-left: 15cm;
+    margin-right: 15cm;
+    border: groove ;
+}
+
+.smallWord{
+    font-size: 10px;
+    color: gray;
+}
+
+.middleWord{
+    font-size: 20px;
+    color: black;
+}
+
+.bigWord{
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
+}
