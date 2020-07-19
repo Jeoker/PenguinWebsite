@@ -37,4 +37,18 @@ public class FindComment extends HttpServlet {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Users user = (Users) session.getAttribute("user");
+        List<Comments> commentsList = new ArrayList<>();
+        try {
+            commentsList = commentsDao.getCommentsByUserId(user);
+            req.setAttribute("userComment",commentsList);
+            req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

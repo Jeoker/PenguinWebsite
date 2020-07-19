@@ -251,7 +251,6 @@ if they do, they can view their profile or log out--%>
                         Commented by <fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy HH:mm:ss"/>
                     </div>
                     <div class="middleWord"><c:out value="${comment.content}"/></div>
-                    <div></div>
 
                     <table>
                         <tr>
@@ -266,7 +265,6 @@ if they do, they can view their profile or log out--%>
                             </td>
                             <td>
                                     <%--user can save other's comment--%>
-                                    <%--save post--%>
                                     <%--only if user has login, they can save posts; otherwise they need to login first--%>
                                 <c:choose>
                                     <c:when test="${sessionScope.user == null}">

@@ -30,6 +30,7 @@ public class CommentLike extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String redirect = req.getParameter("redirect");
         int commentId = Integer.parseInt(req.getParameter("commentId"));
         HttpSession session = req.getSession();
         Users user = (Users) session.getAttribute("user");
@@ -42,7 +43,26 @@ public class CommentLike extends HttpServlet {
                 Comments comment = commentsDao.getCommentById(commentId);
                 Likes like = new Likes(user,null,comment);
                 likesDao.create(like);
-                req.getRequestDispatcher("/PostComment.jsp").forward(req,resp);
+                switch (redirect) {
+                    case "index":
+                        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                        break;
+                    case "UserMyProfile":
+                        req.getRequestDispatcher("/UserMyProfile.jsp").forward(req, resp);
+                        break;
+                    case "PostComment":
+                        req.getRequestDispatcher("/PostComment.jsp").forward(req, resp);
+                        break;
+                    case "FindPost":
+                        req.getRequestDispatcher("findpost").forward(req, resp);
+                        break;
+                    case "FindComment":
+                        req.getRequestDispatcher("findcomment").forward(req, resp);
+                        break;
+                    case "FindSave":
+                        req.getRequestDispatcher("findsave").forward(req, resp);
+                        break;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

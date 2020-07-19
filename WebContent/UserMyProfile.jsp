@@ -1,11 +1,8 @@
 <%@ page import="web.dal.CommentsDao" %>
-<%@ page import="web.model.Posts" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="web.dal.CollectionsDao" %>
-<%@ page import="web.model.Users" %>
-<%@ page import="web.model.Collections" %>
-<%@ page import="web.model.Likes" %>
 <%@ page import="web.dal.LikesDao" %>
+<%@ page import="web.model.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -212,7 +209,7 @@
                                     </form>
                                 </c:when>
                                 <c:otherwise>
-                                    <form action="postlike delete" method="post">
+                                    <form action="postlikedelete" method="post">
                                         <input type="text" name="redirect" value="FindPost" hidden>
                                         <input type="text" name="likeId" value="${userLike.likeId}" hidden>
                                         <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
@@ -241,77 +238,332 @@
     </c:forEach>
 </c:if>
 
+<%--user can view their comments--%>
+<%--user's comments--%>
 <c:if test="${userComment != null}">
-<div class="post" style="background-color: white">
-        <%--user can view their comments--%>
-        <%--user's comments--%>
+<div class="middleWord" style="border-bottom: 1px solid white;text-align: center"><h1>COMMENTS</h1></div><br/>
     <div>
         <c:forEach items="${userComment}" var="comment">
-            <div style="background-color: antiquewhite">
+            <c:set var="allCommentCurrentComment" scope="request" value="${comment}"/>
+            <div class="post" style="background-color: white">
                 <div>
-                    <div><c:out value="${comment.user.userName}"/></div>
-                    <div><c:out value="${comment.content}"/></div>
-                    <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                    <div class="smallWord">
+                        <c:out value="${comment.user.userName}"/>
+                        Commented by <fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy HH:mm:ss"/>
+                    </div>
+                    <div class="middleWord"><c:out value="${comment.content}"/></div>
                 </div>
-                <div>
-                        <%--delete comments, user can delete their own comments--%>
-                    <form action="commentdelete" method="post">
-                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
-                        <div><input type="submit" value="Delete"></div>
-                    </form>
-                </div>
-            </div>
+                <table>
+                    <tr>
+                        <td>
+                            <%--user can reply other's comment--%>
+                            <div>
+                                <form action="commentreply" method="get">
+                                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                    <div><input type="submit" value="Reply" class="btn btn-secondary"></div>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <%--save comments--%>
+                            <div>
+                                    <%--get save by userId and postId--%>
+                                <%
+                                    CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                                    Users user = (Users) session.getAttribute("user");
+                                    Comments comment = (Comments) request.getAttribute("allCommentCurrentComment");
+                                    try {
+                                        Collections collection = collectionsDao.getCollectionByUserIdCommentId(user,comment);
+                                        request.setAttribute("userSave",collection);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                %>
+                                    <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                                <c:choose>
+                                    <c:when test="${userSave == null}">
+                                        <form action="commentsave" method="post">
+                                            <input type="text" name="redirect" value="FindComment" hidden>
+                                            <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                            <div><input type="submit" value="Save" class="btn btn-secondary"></div>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form action="commentunsave" method="post">
+                                            <input type="text" name="redirect" value="FindComment" hidden>
+                                            <input type="text" name="commentId" value="${userSave.comment.commentId}" hidden>
+                                            <div><input type="submit" value="unSave" class="btn btn-primary"></div>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </td>
+                        <td>
+                            <%--Like comments--%>
+                            <div>
+                                <%
+                                    LikesDao likesDao = LikesDao.getInstance();
+                                    try {
+                                        // get like by userId and PostId
+                                        Likes like = likesDao.getLikesByUserIdCommentId(user,comment);
+                                        // get the number of likes for this post
+                                        int numberOfLikes = likesDao.getLikeNumberByCommentId(comment.getCommentId());
+                                        request.setAttribute("userLike",like);
+                                        request.setAttribute("numberOfLikes",numberOfLikes);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                %>
+
+                                <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                                <c:choose>
+                                    <c:when test="${userLike == null}">
+                                        <form action="commentlike" method="post">
+                                            <input type="text" name="redirect" value="FindComment" hidden>
+                                            <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                            <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form action="commentlikedelete" method="post">
+                                            <input type="text" name="redirect" value="FindComment" hidden>
+                                            <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                                            <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                    <%--delete comments, user can delete their own comments--%>
+                                <form action="commentdelete" method="post">
+                                    <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                    <div><input type="submit" value="Delete" class="btn btn-secondary"></div>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div><br/>
         </c:forEach>
     </div>
-</div>
 </c:if>
 
+<%--user can view their collections--%>
 <c:if test="${savedPost != null || savedComment != null}">
-    <div class="post" style="background-color: white">
-            <%--user can view their collections--%>
-            <%--saved posts--%>
+    <div>
+        <div class="middleWord" style="border-bottom: 1px solid white;text-align: center"><h1>SAVED</h1></div><br/>
+
+        <%--saved posts--%>
         <c:forEach items="${savedPost}" var="post" >
-            <div style="background-color: antiquewhite">
-                <div><c:out value="${post.getTitle()}" /></div>
-                <div><c:out value="${post.getContent()}" /></div>
-                <div><c:if test="${post.getPicture() != null}">
-                    <img src="${post.getPicture()}" width="100px">
-                </c:if></div>
-                <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                    <%--post's comments--%>
-                <div>
-                    <form action="postcomment" method="post">
-                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                        <div><input type="submit" value="Comment"></div>
-                    </form>
-                        <%--unsave post--%>
-                    <form action="postunsave" method="post">
-                        <input type="text" name="redirect" value="UserMyProfile" hidden>
-                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                        <div><input type="submit" value="Unsave"></div>
-                    </form>
+            <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
+            <div  class="post" style="background-color: white">
+                <div class="smallWord">
+                    <c:out value="${post.user.userName}" />
+                    Posted by <fmt:formatDate value="${post.created}" pattern="MM-dd-yyyy HH:mm:ss"/>
                 </div>
-            </div>
+                <div class="bigWord"><c:out value="${post.title}" /></div>
+                <div class="middleWord"><c:out value="${post.content}" /></div>
+                <div align="center">
+                    <c:if test="${post.picture != null}">
+                        <img src="${post.picture}" width="500px" height="250px">
+                    </c:if>
+                </div><br/>
+                <table>
+                    <tr>
+                        <td>
+                                <%--post's comments--%>
+                            <%
+                                CommentsDao commentsDao = CommentsDao.getInstance();
+                                try {
+                                    Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                                    // get the number of likes for this post
+                                    int numberOfComments = commentsDao.getCommentNumberByPostId(post.getPostId());
+                                    request.setAttribute("numberOfComments",numberOfComments);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+                            <div>
+                                <form action="postcomment" method="post">
+                                    <input type="text" name="postId" value="${post.postId}" hidden>
+                                    <div><input type="submit" value="${numberOfComments} Comments" class="btn btn-secondary"></div>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                                <%--save post--%>
+                            <div>
+                                    <%--get save by userId and postId--%>
+                                <%
+                                    CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                                    Users user = (Users) session.getAttribute("user");
+                                    Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                                    try {
+                                        Collections collection = collectionsDao.getCollectionByUserIdPostId(user,post);
+                                        request.setAttribute("userSave",collection);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                %>
+                                    <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                                <c:choose>
+                                    <c:when test="${userSave == null}">
+                                        <form action="postsave" method="post">
+                                            <input type="text" name="redirect" value="FindSave" hidden>
+                                            <input type="text" name="postId" value="${post.postId}" hidden>
+                                            <div><input type="submit" value="Save" class="btn btn-secondary"></div>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form action="postunsave" method="post">
+                                            <input type="text" name="redirect" value="FindSave" hidden>
+                                            <input type="text" name="postId" value="${userSave.post.postId}" hidden>
+                                            <div><input type="submit" value="unSave" class="btn btn-primary"></div>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </td>
+                        <td>
+                                <%--Like posts--%>
+                            <%
+                                // get the number of likes for this post
+                                LikesDao likesDao = LikesDao.getInstance();
+                                // get like by userId and PostId
+                                Likes like = null;
+                                try {
+                                    int numberOfLikes = likesDao.getLikeNumberByPostId(post.getPostId());
+                                    request.setAttribute("numberOfLikes",numberOfLikes);
+
+                                    like = likesDao.getLikesByUserIdPostId(user,post);
+                                    request.setAttribute("userLike",like);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+                            <div>
+                                    <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                                <c:choose>
+                                    <c:when test="${userLike == null}">
+                                        <form action="postlike" method="post">
+                                            <input type="text" name="redirect" value="FindSave" hidden>
+                                            <input type="text" name="postId" value="${post.postId}" hidden>
+                                            <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form action="postlikedelete" method="post">
+                                            <input type="text" name="redirect" value="FindSave" hidden>
+                                            <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                                            <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div><br/>
         </c:forEach>
 
-            <%--saved comments--%>
+        <%--saved comments--%>
         <div>
             <c:forEach items="${savedComment}" var="comment">
-                <div style="background-color: antiquewhite">
+                <c:set var="allCommentCurrentComment" scope="request" value="${comment}"/>
+                <div  class="post" style="background-color: white">
                     <div>
-                        <div><c:out value="${comment.user.userName}"/></div>
-                        <div><c:out value="${comment.content}"/></div>
-                        <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                        <div class="smallWord">
+                            <c:out value="${comment.user.userName}"/>
+                            Commented by <fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy HH:mm:ss"/>
+                        </div>
+                        <div class="middleWord"><c:out value="${comment.content}"/></div>
                     </div>
-                        <%--unsave comment--%>
-                    <div>
-                        <form action="commentunsave" method="post">
-                            <input type="text" name="redirect" value="UserMyProfile" hidden>
-                            <input type="text" name="commentId" value="${comment.commentId}" hidden>
-                            <div><input type="submit" value="Unsave"></div>
-                        </form>
-                    </div>
-                </div>
+                    <table>
+                        <tr>
+                            <td>
+                                    <%--user can reply other's comment--%>
+                                <div>
+                                    <form action="commentreply" method="get">
+                                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                        <div><input type="submit" value="Reply" class="btn btn-secondary"></div>
+                                    </form>
+                                </div>
+                            </td>
+                            <td>
+                                    <%--save comments--%>
+                                <div>
+                                        <%--get save by userId and postId--%>
+                                    <%
+                                        CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                                        Users user = (Users) session.getAttribute("user");
+                                        Comments comment = (Comments) request.getAttribute("allCommentCurrentComment");
+                                        try {
+                                            Collections collection = collectionsDao.getCollectionByUserIdCommentId(user,comment);
+                                            request.setAttribute("userSave",collection);
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+                                    %>
+                                        <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                                    <c:choose>
+                                        <c:when test="${userSave == null}">
+                                            <form action="commentsave" method="post">
+                                                <input type="text" name="redirect" value="FindSave" hidden>
+                                                <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                                <div><input type="submit" value="Save" class="btn btn-secondary"></div>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <form action="commentunsave" method="post">
+                                                <input type="text" name="redirect" value="FindSave" hidden>
+                                                <input type="text" name="commentId" value="${userSave.comment.commentId}" hidden>
+                                                <div><input type="submit" value="unSave" class="btn btn-primary"></div>
+                                            </form>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </td>
+                            <td>
+                                    <%--Like comments--%>
+                                <div>
+                                    <%
+                                        LikesDao likesDao = LikesDao.getInstance();
+                                        try {
+                                            // get like by userId and PostId
+                                            Likes like = likesDao.getLikesByUserIdCommentId(user,comment);
+                                            // get the number of likes for this post
+                                            int numberOfLikes = likesDao.getLikeNumberByCommentId(comment.getCommentId());
+                                            request.setAttribute("userLike",like);
+                                            request.setAttribute("numberOfLikes",numberOfLikes);
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+                                    %>
+
+                                        <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                                    <c:choose>
+                                        <c:when test="${userLike == null}">
+                                            <form action="commentlike" method="post">
+                                                <input type="text" name="redirect" value="FindSave" hidden>
+                                                <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                                <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <form action="commentlikedelete" method="post">
+                                                <input type="text" name="redirect" value="FindSave" hidden>
+                                                <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                                                <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
+                                            </form>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div><br/>
             </c:forEach>
         </div>
     </div>

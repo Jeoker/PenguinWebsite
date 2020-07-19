@@ -59,4 +59,31 @@ public class FindSave extends HttpServlet {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Users user = (Users) session.getAttribute("user");
+        List<Collections> collectionsList = new ArrayList<>();
+        List<Posts> postsList = new ArrayList<>();
+        List<Comments> commentsList = new ArrayList<>();
+        try {
+            collectionsList = collectionsDao.getCollectionsByUserId(user);
+            for(Collections collection : collectionsList){
+                if (collection.getPost() != null){
+                    Posts post = postsDao.getPostByPostId(collection.getPost().getPostId());
+                    postsList.add(post);
+                }else if (collection.getComment() != null){
+                    Comments comment = commentsDao.getCommentById(collection.getComment().getCommentId());
+                    commentsList.add(comment);
+                }
+
+            }
+            req.setAttribute("savedPost",postsList);
+            req.setAttribute("savedComment",commentsList);
+            req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

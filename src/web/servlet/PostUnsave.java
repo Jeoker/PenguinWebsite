@@ -61,6 +61,9 @@ public class PostUnsave extends HttpServlet {
                 case "FindPost":
                     req.getRequestDispatcher("findpost").forward(req, resp);
                     break;
+                case "FindSave":
+                    req.getRequestDispatcher("findsave").forward(req, resp);
+                    break;
             }
 
         } catch (SQLException e) {
