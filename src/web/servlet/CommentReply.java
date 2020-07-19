@@ -40,21 +40,6 @@ public class CommentReply extends HttpServlet {
         if (user == null){
             req.getRequestDispatcher("/SignUpLogin.jsp").forward(req,resp);
         }else {
-//            try {
-//
-//                Comments comment = commentsDao.getCommentById(commentId);
-//                session.setAttribute("currentComment",comment);
-//
-//                Posts post = postsDao.getPostByPostId(comment.getPost().getPostId());
-//                session.setAttribute("currentPost",post);
-//
-//                List<Comments> commentsList = new ArrayList<>();
-//                commentsList = commentsDao.getReplyCommentsByFatherCommentId(commentId);
-//                session.setAttribute("currentReplies",commentsList);
-//                req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
             if(replyObject.equals("comment")){
                 req.setAttribute("commentId",commentId);
             }else if (replyObject.equals("childComment")){

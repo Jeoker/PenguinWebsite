@@ -42,11 +42,11 @@ if they do, they can view their profile or log out--%>
             </c:when>
             <c:when test="${sessionScope.user.status.name().equals('Administrator')}">
               <%--user my profile--%>
-              <a href="AdministratorMyProfile.jsp" class="btn btn-primary btn-lg active" role="button">My Profile</a>
+              <a href="AdministratorMyProfile.jsp" class="btn btn-primary" role="button" style="width: 120px;height: 50px;margin-left: 20px">My Profile</a>
             </c:when>
             <c:when test="${sessionScope.user.status.name().equals('Researcher')}">
               <%--user my profile--%>
-              <a href="ResearcherMyProfile.jsp" class="btn btn-primary btn-lg active" role="button">My Profile</a>
+              <a href="ResearcherMyProfile.jsp" class="btn btn-primary" role="button" style="width: 120px;height: 50px;margin-left: 20px">My Profile</a>
             </c:when>
           </c:choose>
 
@@ -68,13 +68,60 @@ if they do, they can view their profile or log out--%>
     </c:choose>
   </div>
 
-  <div align="center" style="border-bottom: 1px solid white"><h1>Posts</h1></div><br/>
+  <div align="center" style="border-bottom: 1px solid white">
+    <h1>Posts</h1>
+    <c:if test="${requestScope.postsOrder == null || requestScope.postsOrder == 'all'}">
+
+    </c:if>
+    <c:choose>
+      <c:when test="${requestScope.postsOrder == null || requestScope.postsOrder == 'all'}">
+        <a href="findpostsbynumberoflikes?postsOrder=all" class="btn btn-primary" role="button" style="width: 120px;margin-left: 20px">ALL</a>
+        <a href="findpostsbynumberoflikes?postsOrder=new" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">NEW</a>
+        <a href="findpostsbynumberoflikes?postsOrder=hot" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">HOT</a>
+        <a href="findpostsbynumberoflikes?postsOrder=top" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">TOP</a>
+      </c:when>
+      <c:when test="${requestScope.postsOrder == 'new'}">
+        <a href="findpostsbynumberoflikes?postsOrder=all" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">ALL</a>
+        <a href="findpostsbynumberoflikes?postsOrder=new" class="btn btn-primary" role="button" style="width: 120px;margin-left: 20px">NEW</a>
+        <a href="findpostsbynumberoflikes?postsOrder=hot" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">HOT</a>
+        <a href="findpostsbynumberoflikes?postsOrder=top" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">TOP</a>
+      </c:when>
+      <c:when test="${requestScope.postsOrder == 'hot'}">
+        <a href="findpostsbynumberoflikes?postsOrder=all" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">ALL</a>
+        <a href="findpostsbynumberoflikes?postsOrder=new" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">NEW</a>
+        <a href="findpostsbynumberoflikes?postsOrder=hot" class="btn btn-primary" role="button" style="width: 120px;margin-left: 20px">HOT</a>
+        <a href="findpostsbynumberoflikes?postsOrder=top" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">TOP</a>
+      </c:when>
+      <c:when test="${requestScope.postsOrder == 'top'}">
+        <a href="findpostsbynumberoflikes?postsOrder=all" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">ALL</a>
+        <a href="findpostsbynumberoflikes?postsOrder=new" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">NEW</a>
+        <a href="findpostsbynumberoflikes?postsOrder=hot" class="btn btn-secondary" role="button" style="width: 120px;margin-left: 20px">HOT</a>
+        <a href="findpostsbynumberoflikes?postsOrder=top" class="btn btn-primary" role="button" style="width: 120px;margin-left: 20px">TOP</a>
+      </c:when>
+    </c:choose>
+  </div><br/>
 <%--all posts--%>
   <%
     PostsDao postsDao = PostsDao.getInstance();
     List<Posts> postsList = new ArrayList<>();
+
+    String postsOrder = (String) request.getAttribute("postsOrder");
+    if(postsOrder == null) postsOrder = "all";
     try {
-      postsList = postsDao.getAllPost();
+      switch (postsOrder){
+        case "all":
+          postsList = postsDao.getAllPost();
+          break;
+        case "hot":
+          postsList = postsDao.getAllPostByNumberOfLikes();
+          break;
+        case "top":
+          postsList = postsDao.getAllPostByNumberOfCollections();
+          break;
+        case "new":
+          postsList = postsDao.getAllPostByCreated();
+          break;
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }

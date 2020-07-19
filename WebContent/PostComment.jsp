@@ -525,20 +525,20 @@ if they do, they can view their profile or log out--%>
                                     </table>
 
                                     <%--reply comment--%>
-                                    <center>
+
                                         <c:if test="${requestScope.childCommentId == childComment.commentId}">
                                             <div>
                                                 <form action="commentreply" method="post">
-                                                    <div class="smallWord">Reply as ${sessionScope.user.userName}</div>
+                                                    <div class="smallWord" style="position: relative;left: 230px">Reply as ${sessionScope.user.userName}</div>
                                                     <input type="text" name="commentId" value="${requestScope.childCommentId}" hidden>
                                                     <div>
                                                         <textarea name="content" class="form-control" cols="30" rows="10" placeholder="What are your thoughts?" style="width: 530px"></textarea>
                                                     </div>
-                                                    <div><input type="submit" value="REPLY" class="btn btn-primary"></div>
+                                                    <div style="position: relative;left: 230px"><input type="submit" value="REPLY" class="btn btn-primary"></div>
                                                 </form>
                                             </div>
                                         </c:if>
-                                    </center>
+
 
                                 </c:if>
                             </c:if>

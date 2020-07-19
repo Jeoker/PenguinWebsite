@@ -320,4 +320,136 @@ public class PostsDao {
         }
         return posts;
     }
+
+    public List<Posts> getAllPostByNumberOfLikes() throws SQLException {
+        List<Posts> posts = new ArrayList<Posts>();
+        String sql = "SELECT Posts.PostId,Title,Picture,Content,Published," +
+                "Created, Posts.UserId " +
+                "FROM Posts LEFT JOIN Likes ON Posts.postId = Likes.postId " +
+                "GROUP BY Posts.postId " +
+                "ORDER BY COUNT(Likes.postId) DESC;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        UsersDao usersDao = UsersDao.getInstance();
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                int postId = rs.getInt("PostId");
+                String title = rs.getString("Title");
+                String picture = rs.getString("Picture");
+                String content = rs.getString("Content");
+                boolean published = rs.getBoolean("Published");
+                Date created =  new Date(rs.getTimestamp("Created").getTime());
+                int userId = rs.getInt("UserId");
+
+                Users user = usersDao.getUserFromUserId(userId);
+                Posts post = new Posts(postId, title, picture, content, published, created, user);
+                posts.add(post);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return posts;
+    }
+
+    public List<Posts> getAllPostByNumberOfCollections() throws SQLException {
+        List<Posts> posts = new ArrayList<Posts>();
+        String sql = "SELECT Posts.PostId,Title,Picture,Content,Published," +
+                "Created, Posts.UserId " +
+                "FROM Posts LEFT JOIN Collections ON Posts.postId = Collections.postId " +
+                "GROUP BY Posts.postId " +
+                "ORDER BY COUNT(Collections.postId) DESC;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        UsersDao usersDao = UsersDao.getInstance();
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                int postId = rs.getInt("PostId");
+                String title = rs.getString("Title");
+                String picture = rs.getString("Picture");
+                String content = rs.getString("Content");
+                boolean published = rs.getBoolean("Published");
+                Date created =  new Date(rs.getTimestamp("Created").getTime());
+                int userId = rs.getInt("UserId");
+
+                Users user = usersDao.getUserFromUserId(userId);
+                Posts post = new Posts(postId, title, picture, content, published, created, user);
+                posts.add(post);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return posts;
+    }
+
+    public List<Posts> getAllPostByCreated() throws SQLException {
+        List<Posts> posts = new ArrayList<Posts>();
+        String sql = "SELECT PostId,Title,Picture,Content,Published,Created,UserId " +
+                "FROM Posts ORDER BY Created DESC;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        UsersDao usersDao = UsersDao.getInstance();
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                int postId = rs.getInt("PostId");
+                String title = rs.getString("Title");
+                String picture = rs.getString("Picture");
+                String content = rs.getString("Content");
+                boolean published = rs.getBoolean("Published");
+                Date created =  new Date(rs.getTimestamp("Created").getTime());
+                int userId = rs.getInt("UserId");
+
+                Users user = usersDao.getUserFromUserId(userId);
+                Posts post = new Posts(postId, title, picture, content, published, created, user);
+                posts.add(post);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return posts;
+    }
 }
