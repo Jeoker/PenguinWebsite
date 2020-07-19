@@ -293,6 +293,7 @@ if they do, they can view their profile or log out--%>
                                             <c:choose>
                                                 <c:when test="${userSave == null}">
                                                     <form action="commentsave" method="post">
+                                                        <input type="text" name="redirect" value="PostComment" hidden>
                                                         <input type="text" name="commentId" value="${comment.commentId}" hidden>
                                                         <div><input type="submit" value="Save" class="btn btn-secondary"></div>
                                                     </form>
@@ -341,12 +342,14 @@ if they do, they can view their profile or log out--%>
                                             <c:choose>
                                                 <c:when test="${userLike == null}">
                                                     <form action="commentlike" method="post">
+                                                        <input type="text" name="redirect" value="PostComment" hidden>
                                                         <input type="text" name="commentId" value="${comment.commentId}" hidden>
                                                         <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
                                                     </form>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <form action="commentlikedelete" method="post">
+                                                        <input type="text" name="redirect" value="PostComment" hidden>
                                                         <input type="text" name="likeId" value="${userLike.likeId}" hidden>
                                                         <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
                                                     </form>
@@ -429,6 +432,7 @@ if they do, they can view their profile or log out--%>
                                                             <c:choose>
                                                                 <c:when test="${userSave == null}">
                                                                     <form action="commentsave" method="post">
+                                                                        <input type="text" name="redirect" value="PostComment" hidden>
                                                                         <input type="text" name="commentId" value="${childComment.commentId}" hidden>
                                                                         <div><input type="submit" value="Save" class="btn btn-secondary"></div>
                                                                     </form>
@@ -483,12 +487,14 @@ if they do, they can view their profile or log out--%>
                                                             <c:choose>
                                                                 <c:when test="${userLike == null}">
                                                                     <form action="commentlike" method="post">
+                                                                        <input type="text" name="redirect" value="PostComment" hidden>
                                                                         <input type="text" name="commentId" value="${childComment.commentId}" hidden>
                                                                         <div><input type="submit" value="${numberOfLikes} Like" class="btn btn-secondary"></div>
                                                                     </form>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <form action="commentlikedelete" method="post">
+                                                                        <input type="text" name="redirect" value="PostComment" hidden>
                                                                         <input type="text" name="likeId" value="${userLike.likeId}" hidden>
                                                                         <div><input type="submit" value="${numberOfLikes} Like" class="btn btn-danger"></div>
                                                                     </form>

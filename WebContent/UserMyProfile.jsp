@@ -336,12 +336,19 @@
                         </td>
                         <td>
                             <div>
-                                    <%--delete comments, user can delete their own comments--%>
+                                <%--delete comments, user can delete their own comments--%>
                                 <form action="commentdelete" method="post">
                                     <input type="text" name="commentId" value="${comment.commentId}" hidden>
                                     <div><input type="submit" value="Delete" class="btn btn-secondary"></div>
                                 </form>
                             </div>
+                        </td>
+                        <td>
+                                <%--edit comments, user can edit their own comments--%>
+                            <form action="commentupdate" method="get">
+                                <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                                <div><input type="submit" value="Edit Post" class="btn btn-secondary"></div>
+                            </form>
                         </td>
                     </tr>
                 </table>
