@@ -34,6 +34,10 @@ public class Posts {
         User = user;
     }
 
+    public Posts() {
+
+    }
+
     public int getPostId() {
         return postId;
     }

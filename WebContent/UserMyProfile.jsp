@@ -4,61 +4,140 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
     <title>MyProfile</title>
 </head>
 <body>
-<center>
 <%--message: user login successful or not--%>
-    <p>
-        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}${messages.deletePost}${messages.commentDelete}</b></span>
-    </p>
+<%--    <p>--%>
+<%--        <span id="successMessage"><b>${messages.NewPost}${messages.PostUnsave}${messages.CommentUnsave}${messages.deletePost}${messages.commentDelete}</b></span>--%>
+<%--    </p>--%>
 
-    <h1>MyProfile</h1><br/>
-
-<%--Home Page--%>
-    <div><a href="index.jsp">Home Page</a></div>
-
-<%--view/update user's personal information--%>
-    <div><a href="finduser">User Settings</a></div>
-
-<%--user can create new posts--%>
-    <div><a href="postcreate">New Post</a></div>
-
-<%--user can view their posts--%>
-    <div><a href="findpost">POSTS</a></div>
-    <c:forEach items="${userpost}" var="post" >
-        <div style="background-color: antiquewhite">
-            <div><c:out value="${post.getTitle()}" /></div>
-            <div><c:out value="${post.getContent()}" /></div>
-            <div><c:if test="${post.getPicture() != null}">
-                <img src="${post.getPicture()}" width="100px">
-            </c:if></div>
-            <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+    <%--if user has not signed up or loged in, they can sign up or login;
+    if they do, they can view their profile or log out--%>
+    <div class="navbar" style="background-color: white">
+        <%-- web name--%>
+        <a href="index.jsp" style="color: black"><h1>PenguinWeb</h1></a>
             <div>
-                <%--post's comments--%>
-                <form action="postcomment" method="post">
-                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                    <div><input type="submit" value="Comment"></div>
+                <%--user log out--%>
+                <form action="userlogout" method="post" style="float: left">
+                    <input type="submit" value="Log Out" class="btn btn-info" style="width: 120px;height: 50px;margin-left: 20px">
                 </form>
-                <%--delete post, user can delete their own posts--%>
-                <form action="postdelete" method="post">
-                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                    <div><input type="submit" value="Delete"></div>
-                </form>
+            </div>
+    </div>
+
+    <div class="navbar" style="background-color: white;border-top: solid 1px gray;border-bottom: solid 1px gray">
+        <div>
+            <%--view/update user's personal information--%>
+            <a href="finduser" style="color: black">User Settings</a>
+            <%--user can create new posts--%>
+            <a href="postcreate" style="color: black">New Post</a>
+            <%--user can view their posts--%>
+            <a href="findpost" style="color: black">POSTS</a>
+            <%--user can view their comments--%>
+            <a href="findcomment" style="color: black">COMMENTS</a>
+            <%--user can view their collections--%>
+            <a href="findsave" style="color: black">SAVED</a>
+        </div>
+    </div>
+
+     <%--form: user update their personal information--%>
+     <center>
+         <c:if test="${messages.update != null}">
+             <div class="alert alert-success" role="alert">
+                     ${messages.update}
+             </div>
+         </c:if>
+         <div>
+             <c:if test="${currentUser != null}">
+                 <div class="middleWord" style="border-bottom: 1px solid white"><h1>User Setting</h1></div><br/>
+                 <form action="userupdate" method="post" style="width: 250px; height: 100px">
+
+                     <input type="hidden" name="userId" value="${currentUser.getUserId()}"/>
+                     <div class="form-group row">
+                         <label for="username">UserName</label>
+                         <input type="text" id="username" name="username" value="${currentUser.getUserName()}" class="form-control">
+                     </div>
+                     <div class="form-group row">
+                         <label for="password">Password</label>
+                         <input type="text" id="password" name="password" value="${currentUser.getPassword()}" class="form-control">
+                     </div>
+                     <div class="form-group row">
+                         <label for="status">Status</label>
+                         <input type="text" id="status" name="status" value="${currentUser.getStatus()}" class="form-control" readonly/>
+                     </div>
+                     <div class="form-group">
+                         <input type="submit" value="CHANGE" class="btn btn-primary">
+                     </div>
+                 </form>
+             </c:if>
+         </div>
+     </center>
+
+<c:if test="${messages.isNewPost != null}">
+    <center>
+        <div class="middleWord" style="border-bottom: 1px solid white"><h1>Create a post</h1></div><br/>
+
+        <form method="post" action="upload" enctype="multipart/form-data" style="width: 500px; height: 100px">
+            <div>
+                <input type="text" id="title" name="title" placeholder="Title" class="form-control">
+            </div>
+            <div>
+                <textarea name="content" class="form-control" cols="30" rows="10" placeholder="Text"></textarea>
+            </div>
+            <div style="background-color: white">
+                <div class="newPostPicture">
+                    <div class="grayWord">Choose a picture to upload</div>
+                    <%--picture--%>
+                    <input type="file" class="form-control-file" id="exampleFormControlFile1" name="uploadFile">
+                </div>
+            </div>
+
+            <input type="submit" value="Post" class="btn btn-primary"/>
+        </form>
+    </center>
+</c:if>
+
+<c:if test="${userpost != null}">
+    <div class="post" style="background-color: white">
+            <%--user can view their posts--%>
+        <c:forEach items="${userpost}" var="post" >
+            <div style="background-color: antiquewhite">
+                <div><c:out value="${post.getTitle()}" /></div>
+                <div><c:out value="${post.getContent()}" /></div>
+                <div><c:if test="${post.getPicture() != null}">
+                    <img src="${post.getPicture()}" width="100px">
+                </c:if></div>
+                <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                <div>
+                        <%--post's comments--%>
+                    <form action="postcomment" method="post">
+                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                        <div><input type="submit" value="Comment"></div>
+                    </form>
+                        <%--delete post, user can delete their own posts--%>
+                    <form action="postdelete" method="post">
+                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                        <div><input type="submit" value="Delete"></div>
+                    </form>
                         <%--delete post, user can delete their own posts--%>
                     <form action="postupdate" method="post">
                         Input new content: <input type="text" name="newContent" value="">
                         <input type="text" name="postId" value="${post.getPostId()}" hidden>
                         <div><input type="submit" value="Update"></div>
                     </form>
+                </div>
             </div>
-        </div>
-    </c:forEach>
+        </c:forEach>
+    </div>
+</c:if>
 
-    <%--user can view their comments--%>
-    <div><a href="findcomment">COMMENTS</a></div>
-    <%--user's comments--%>
+<c:if test="${userComment != null}">
+<div class="post" style="background-color: white">
+        <%--user can view their comments--%>
+        <%--user's comments--%>
     <div>
         <c:forEach items="${userComment}" var="comment">
             <div style="background-color: antiquewhite">
@@ -77,56 +156,59 @@
             </div>
         </c:forEach>
     </div>
+</div>
+</c:if>
 
-<%--user can view their collections--%>
-    <div><a href="findsave">SAVED</a></div>
-<%--saved posts--%>
-    <c:forEach items="${savedPost}" var="post" >
-        <div style="background-color: antiquewhite">
-            <div><c:out value="${post.getTitle()}" /></div>
-            <div><c:out value="${post.getContent()}" /></div>
-            <div><c:if test="${post.getPicture() != null}">
-                <img src="${post.getPicture()}" width="100px">
-            </c:if></div>
-            <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                <%--post's comments--%>
-            <div>
-                <form action="postcomment" method="post">
-                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                    <div><input type="submit" value="Comment"></div>
-                </form>
-                    <%--unsave post--%>
-                <form action="postunsave" method="post">
-                    <input type="text" name="redirect" value="UserMyProfile" hidden>
-                    <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                    <div><input type="submit" value="Unsave"></div>
-                </form>
-            </div>
-        </div>
-    </c:forEach>
-
-    <%--saved comments--%>
-    <div>
-        <c:forEach items="${savedComment}" var="comment">
+<c:if test="${savedPost != null || savedComment != null}">
+    <div class="post" style="background-color: white">
+            <%--user can view their collections--%>
+            <%--saved posts--%>
+        <c:forEach items="${savedPost}" var="post" >
             <div style="background-color: antiquewhite">
+                <div><c:out value="${post.getTitle()}" /></div>
+                <div><c:out value="${post.getContent()}" /></div>
+                <div><c:if test="${post.getPicture() != null}">
+                    <img src="${post.getPicture()}" width="100px">
+                </c:if></div>
+                <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                    <%--post's comments--%>
                 <div>
-                    <div><c:out value="${comment.user.userName}"/></div>
-                    <div><c:out value="${comment.content}"/></div>
-                    <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                </div>
-                    <%--unsave comment--%>
-                <div>
-                    <form action="commentunsave" method="post">
+                    <form action="postcomment" method="post">
+                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                        <div><input type="submit" value="Comment"></div>
+                    </form>
+                        <%--unsave post--%>
+                    <form action="postunsave" method="post">
                         <input type="text" name="redirect" value="UserMyProfile" hidden>
-                        <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
                         <div><input type="submit" value="Unsave"></div>
                     </form>
                 </div>
             </div>
         </c:forEach>
+
+            <%--saved comments--%>
+        <div>
+            <c:forEach items="${savedComment}" var="comment">
+                <div style="background-color: antiquewhite">
+                    <div>
+                        <div><c:out value="${comment.user.userName}"/></div>
+                        <div><c:out value="${comment.content}"/></div>
+                        <div><fmt:formatDate value="${comment.created}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                    </div>
+                        <%--unsave comment--%>
+                    <div>
+                        <form action="commentunsave" method="post">
+                            <input type="text" name="redirect" value="UserMyProfile" hidden>
+                            <input type="text" name="commentId" value="${comment.commentId}" hidden>
+                            <div><input type="submit" value="Unsave"></div>
+                        </form>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
     </div>
+</c:if>
 
-
-</center>
 </body>
 </html>

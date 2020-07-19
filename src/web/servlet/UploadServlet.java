@@ -3,21 +3,34 @@ package web.servlet;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import web.dal.PostsDao;
+import web.model.Posts;
+import web.model.Users;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @WebServlet("/upload")
 public class UploadServlet extends HttpServlet {
+    protected PostsDao postsDao;
+
+    @Override
+    public void init() throws ServletException {
+        postsDao = PostsDao.getInstance();
+    }
+
     private static final long serialVersionUID = 1L;
 
     // 上传文件存储目录
@@ -75,6 +88,8 @@ public class UploadServlet extends HttpServlet {
             uploadDir.mkdir();
         }
 
+        Posts post = new Posts();
+
         try {
             // 解析请求的内容提取文件数据
             @SuppressWarnings("unchecked")
@@ -84,23 +99,44 @@ public class UploadServlet extends HttpServlet {
                 // 迭代表单数据
                 for (FileItem item : formItems) {
                     // 处理不在表单中的字段
+                    // 获取图片
                     if (!item.isFormField()) {
                         String fileName = new File(item.getName()).getName();
                         String filePath = uploadPath + File.separator + fileName;
                         File storeFile = new File(filePath);
                         request.setAttribute("filePath",UPLOAD_DIRECTORY+File.separator+fileName);
+                        post.setPicture(UPLOAD_DIRECTORY+File.separator+fileName);
                         // 在控制台输出文件的上传路径
                         System.out.println(filePath);
                         // 保存文件到硬盘
                         item.write(storeFile);
                         messages.put("upload","Upload Successful");
+                    }else {
+                        // 获取text
+                        String value = item.getString("UTF-8");
+                        if (item.getFieldName().equals("title")) {
+                            post.setTitle(value);
+                        } else if(item.getFieldName().equals("content")){
+                            post.setContent(value);
+                        }
                     }
                 }
             }
         } catch (Exception ex) {
             messages.put("upload","Upload Failed");
         }
-        // 跳转到 message.jsp
-        getServletContext().getRequestDispatcher("/NewPost.jsp").forward(request, response);
+        Date date = new Date();
+        post.setCreated(date);
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        post.setUser(user);
+        post.setPublished(true);
+        try {
+            postsDao.create(post);
+            messages.put("NewPost","Post Successfully");
+            request.getRequestDispatcher("/UserMyProfile.jsp").forward(request,response);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

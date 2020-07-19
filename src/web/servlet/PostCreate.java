@@ -28,14 +28,6 @@ public class PostCreate extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // 上传文件存储目录
-    private static final String UPLOAD_DIRECTORY = "upload";
-
-    // 上传配置
-    private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
-    private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
-    private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
-
     @Override
     public void init() throws ServletException {
         postsDao = PostsDao.getInstance();
@@ -46,9 +38,10 @@ public class PostCreate extends HttpServlet {
             throws ServletException, IOException {
         // Map for storing messages.
         Map<String, String> messages = new HashMap<String, String>();
+        messages.put("isNewPost","yes");
         req.setAttribute("messages", messages);
         //Just render the JSP.
-        req.getRequestDispatcher("/NewPost.jsp").forward(req,resp);
+        req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
     }
 
     @Override

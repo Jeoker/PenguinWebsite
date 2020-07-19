@@ -4,6 +4,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
     <title>New Post</title>
 </head>

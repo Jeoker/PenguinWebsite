@@ -7,17 +7,20 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
-    <title>Title</title>
+    <title>Sign Up Or Login</title>
 </head>
 <body>
 <center>
-    <div><h1>Please Sign Up Or Login</h1></div>
-    <%--create user--%>
-    <div><a href="usercreate">SIGN UP</a></div>
-
-    <%-- user login--%>
-    <div><a href="userlogin">LOG IN</a></div>
+    <div><h1>Please Sign Up Or Login</h1></div><br/>
+    <div>
+        <%--create user--%>
+        <a href="usercreate" class="btn btn-primary" role="button" style="width: 120px;margin-left: 20px">SIGN UP</a>
+        <%-- user login--%>
+        <a href="userlogin" class="btn btn-info" role="button" style="width: 120px;margin-left: 20px">LOG IN</a>
+    </div>
 </center>
 </body>
 </html>

@@ -47,7 +47,7 @@ public class UserUpdate extends HttpServlet {
                 HttpSession session = req.getSession();
                 session.setAttribute("user",user);
                 messages.put("update", "Change Successful");
-                req.getRequestDispatcher("/UserSetting.jsp").forward(req,resp);
+                req.getRequestDispatcher("finduser").forward(req,resp);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
