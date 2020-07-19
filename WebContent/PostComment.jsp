@@ -71,7 +71,7 @@ if they do, they can view their profile or log out--%>
             <c:if test="${sessionScope.currentPost.picture != null}">
                 <img src="${sessionScope.currentPost.picture}" width="500px" height="250px">
             </c:if>
-        </div>
+        </div><br/>
         <table>
             <tr>
                 <td>
@@ -258,6 +258,7 @@ if they do, they can view their profile or log out--%>
                                 <%--user can reply other's comment--%>
                                 <div>
                                     <form action="commentreply" method="get">
+                                        <input type="text" name="replyObject" value="comment" hidden>
                                         <input type="text" name="commentId" value="${comment.commentId}" hidden>
                                         <div><input type="submit" value="Reply" class="btn btn-secondary"></div>
                                     </form>
@@ -361,6 +362,21 @@ if they do, they can view their profile or log out--%>
                             </td>
                         </tr>
                     </table>
+                    <%--reply comment--%>
+                    <center>
+                        <c:if test="${requestScope.commentId == comment.commentId}">
+                            <div>
+                                <form action="commentreply" method="post">
+                                    <div class="smallWord">Reply as ${sessionScope.user.userName}</div>
+                                    <input type="text" name="commentId" value="${requestScope.commentId}" hidden>
+                                    <div>
+                                        <textarea name="content" class="form-control" cols="30" rows="10" placeholder="What are your thoughts?" style="width: 600px"></textarea>
+                                    </div>
+                                    <div><input type="submit" value="REPLY" class="btn btn-primary"></div>
+                                </form>
+                            </div>
+                        </c:if>
+                    </center>
 
                     <%--get child comments--%>
                     <div style="position: relative;left: 50px">
@@ -398,6 +414,7 @@ if they do, they can view their profile or log out--%>
                                                     <%--user can reply other's comment--%>
                                                 <div>
                                                     <form action="commentreply" method="get">
+                                                        <input type="text" name="replyObject" value="childComment" hidden>
                                                         <input type="text" name="commentId" value="${childComment.commentId}" hidden>
                                                         <div><input type="submit" value="Reply" class="btn btn-secondary"></div>
                                                     </form>
@@ -506,6 +523,22 @@ if they do, they can view their profile or log out--%>
                                             </td>
                                         </tr>
                                     </table>
+
+                                    <%--reply comment--%>
+                                    <center>
+                                        <c:if test="${requestScope.childCommentId == childComment.commentId}">
+                                            <div>
+                                                <form action="commentreply" method="post">
+                                                    <div class="smallWord">Reply as ${sessionScope.user.userName}</div>
+                                                    <input type="text" name="commentId" value="${requestScope.childCommentId}" hidden>
+                                                    <div>
+                                                        <textarea name="content" class="form-control" cols="30" rows="10" placeholder="What are your thoughts?" style="width: 530px"></textarea>
+                                                    </div>
+                                                    <div><input type="submit" value="REPLY" class="btn btn-primary"></div>
+                                                </form>
+                                            </div>
+                                        </c:if>
+                                    </center>
 
                                 </c:if>
                             </c:if>

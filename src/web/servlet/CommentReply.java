@@ -1,6 +1,7 @@
 package web.servlet;
 
 import web.dal.CommentsDao;
+import web.dal.PostsDao;
 import web.model.Comments;
 import web.model.Posts;
 import web.model.Users;
@@ -18,10 +19,12 @@ import java.util.*;
 @WebServlet("/commentreply")
 public class CommentReply extends HttpServlet {
     protected CommentsDao commentsDao;
+    protected PostsDao postsDao;
 
     @Override
     public void init() throws ServletException {
         commentsDao = CommentsDao.getInstance();
+        postsDao = PostsDao.getInstance();
     }
 
     @Override
@@ -31,23 +34,33 @@ public class CommentReply extends HttpServlet {
         req.setAttribute("messages", messages);
 
         int commentId = Integer.parseInt(req.getParameter("commentId"));
+        String replyObject = req.getParameter("replyObject");
         HttpSession session = req.getSession();
         Users user = (Users)session.getAttribute("user");
         if (user == null){
             req.getRequestDispatcher("/SignUpLogin.jsp").forward(req,resp);
         }else {
-            try {
-
-                Comments comment = commentsDao.getCommentById(commentId);
-                session.setAttribute("currentComment",comment);
-
-                List<Comments> commentsList = new ArrayList<>();
-                commentsList = commentsDao.getReplyCommentsByFatherCommentId(commentId);
-                session.setAttribute("currentReplies",commentsList);
-                req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);
-            } catch (SQLException e) {
-                e.printStackTrace();
+//            try {
+//
+//                Comments comment = commentsDao.getCommentById(commentId);
+//                session.setAttribute("currentComment",comment);
+//
+//                Posts post = postsDao.getPostByPostId(comment.getPost().getPostId());
+//                session.setAttribute("currentPost",post);
+//
+//                List<Comments> commentsList = new ArrayList<>();
+//                commentsList = commentsDao.getReplyCommentsByFatherCommentId(commentId);
+//                session.setAttribute("currentReplies",commentsList);
+//                req.getRequestDispatcher("/CommentReply.jsp").forward(req,resp);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+            if(replyObject.equals("comment")){
+                req.setAttribute("commentId",commentId);
+            }else if (replyObject.equals("childComment")){
+                req.setAttribute("childCommentId",commentId);
             }
+            req.getRequestDispatcher("/PostComment.jsp").forward(req,resp);
         }
     }
 
