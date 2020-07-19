@@ -1,3 +1,9 @@
+<%@ page import="web.dal.CommentsDao" %>
+<%@ page import="web.model.Posts" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="web.dal.CollectionsDao" %>
+<%@ page import="web.model.Users" %>
+<%@ page import="web.model.Collections" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -28,12 +34,13 @@
             </div>
     </div>
 
+    <%--Navbar--%>
     <div class="navbar" style="background-color: white;border-top: solid 1px gray;border-bottom: solid 1px gray">
         <div>
             <%--view/update user's personal information--%>
-            <a href="finduser" style="color: black">User Settings</a>
+            <a href="finduser" style="color: black">USER SETTING</a>
             <%--user can create new posts--%>
-            <a href="postcreate" style="color: black">New Post</a>
+            <a href="postcreate" style="color: black">NEW POST</a>
             <%--user can view their posts--%>
             <a href="findpost" style="color: black">POSTS</a>
             <%--user can view their comments--%>
@@ -52,7 +59,7 @@
          </c:if>
          <div>
              <c:if test="${currentUser != null}">
-                 <div class="middleWord" style="border-bottom: 1px solid white"><h1>User Setting</h1></div><br/>
+                 <div class="middleWord" style="border-bottom: 1px solid white"><h1>USER SETTING</h1></div><br/>
                  <form action="userupdate" method="post" style="width: 250px; height: 100px">
 
                      <input type="hidden" name="userId" value="${currentUser.getUserId()}"/>
@@ -76,11 +83,12 @@
          </div>
      </center>
 
+<%--Create a new post--%>
 <c:if test="${messages.isNewPost != null}">
     <center>
-        <div class="middleWord" style="border-bottom: 1px solid white"><h1>Create a post</h1></div><br/>
+        <div class="middleWord" style="border-bottom: 1px solid white"><h1>NEW POSTS</h1></div><br/>
 
-        <form method="post" action="upload" enctype="multipart/form-data" style="width: 500px; height: 100px">
+        <form action="upload" method="post" enctype="multipart/form-data" style="width: 500px; height: 100px">
             <div>
                 <input type="text" id="title" name="title" placeholder="Title" class="form-control">
             </div>
@@ -100,38 +108,98 @@
     </center>
 </c:if>
 
+<%--View Own Posts--%>
 <c:if test="${userpost != null}">
-    <div class="post" style="background-color: white">
-            <%--user can view their posts--%>
-        <c:forEach items="${userpost}" var="post" >
-            <div style="background-color: antiquewhite">
-                <div><c:out value="${post.getTitle()}" /></div>
-                <div><c:out value="${post.getContent()}" /></div>
-                <div><c:if test="${post.getPicture() != null}">
-                    <img src="${post.getPicture()}" width="100px">
-                </c:if></div>
-                <div><fmt:formatDate value="${post.getCreated()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-                <div>
-                        <%--post's comments--%>
-                    <form action="postcomment" method="post">
-                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                        <div><input type="submit" value="Comment"></div>
-                    </form>
-                        <%--delete post, user can delete their own posts--%>
-                    <form action="postdelete" method="post">
-                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                        <div><input type="submit" value="Delete"></div>
-                    </form>
-                        <%--delete post, user can delete their own posts--%>
-                    <form action="postupdate" method="post">
-                        Input new content: <input type="text" name="newContent" value="">
-                        <input type="text" name="postId" value="${post.getPostId()}" hidden>
-                        <div><input type="submit" value="Update"></div>
-                    </form>
-                </div>
+    <div class="middleWord" style="border-bottom: 1px solid white;text-align: center"><h1>POSTS</h1></div><br/>
+    <c:forEach items="${userpost}" var="post" >
+        <c:set var="allPostCurrentPost" scope="request" value="${post}"/>
+        <div class="post" style="background-color: white">
+            <div class="smallWord">
+                <c:out value="${post.user.userName}" />
+                Posted by <fmt:formatDate value="${post.created}" pattern="MM-dd-yyyy HH:mm:ss"/>
             </div>
-        </c:forEach>
-    </div>
+            <div class="bigWord"><c:out value="${post.title}" /></div>
+            <div class="middleWord"><c:out value="${post.content}" /></div>
+            <div align="center">
+                <c:if test="${post.picture != null}">
+                    <img src="${post.picture}" width="500px" height="250px">
+                </c:if>
+            </div><br/>
+
+            <table>
+                <tr>
+                    <td>
+                        <%--post's comments--%>
+                        <%
+                            CommentsDao commentsDao = CommentsDao.getInstance();
+                            try {
+                                Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                                // get the number of likes for this post
+                                int numberOfComments = commentsDao.getCommentNumberByPostId(post.getPostId());
+                                request.setAttribute("numberOfComments",numberOfComments);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        %>
+                        <div>
+                            <form action="postcomment" method="post">
+                                <input type="text" name="postId" value="${post.postId}" hidden>
+                                <div><input type="submit" value="${numberOfComments} Comments" class="btn btn-secondary"></div>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <%--save post--%>
+                        <div>
+                                <%--get save by userId and postId--%>
+                            <%
+                                CollectionsDao collectionsDao = CollectionsDao.getInstance();
+                                Users user = (Users) session.getAttribute("user");
+                                Posts post = (Posts) request.getAttribute("allPostCurrentPost");
+                                try {
+                                    Collections collection = collectionsDao.getCollectionByUserIdPostId(user,post);
+                                    request.setAttribute("userSave",collection);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            %>
+                                <%--if user has not saved this post, he can choose save; otherwise he can cancel save--%>
+                            <c:choose>
+                                <c:when test="${userSave == null}">
+                                    <form action="postsave" method="post">
+                                        <input type="text" name="redirect" value="FindPost" hidden>
+                                        <input type="text" name="postId" value="${post.postId}" hidden>
+                                        <div><input type="submit" value="Save" class="btn btn-secondary"></div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <form action="postunsave" method="post">
+                                        <input type="text" name="redirect" value="FindPost" hidden>
+                                        <input type="text" name="postId" value="${userSave.post.postId}" hidden>
+                                        <div><input type="submit" value="unSave" class="btn btn-primary"></div>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </td>
+                    <td>
+                        <%--delete post, user can delete their own posts--%>
+                        <form action="postdelete" method="post">
+                            <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                            <div><input type="submit" value="Delete" class="btn btn-secondary"></div>
+                        </form>
+                    </td>
+                    <td>
+                        <%--edit post, user can edit their own posts--%>
+                        <form action="postupdate" method="get">
+                            <input type="text" name="postId" value="${post.getPostId()}" hidden>
+                            <div><input type="submit" value="Edit Post" class="btn btn-secondary"></div>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div><br/>
+    </c:forEach>
 </c:if>
 
 <c:if test="${userComment != null}">

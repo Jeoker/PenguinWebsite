@@ -21,13 +21,25 @@ public class PostUpdate extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int postId = Integer.parseInt(req.getParameter("postId"));
+        try {
+            Posts post = postsDao.getPostByPostId(postId);
+            req.setAttribute("post",post);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        req.getRequestDispatcher("/UpdatePost.jsp").forward(req,resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int postId = Integer.parseInt(req.getParameter("postId"));
         String newContent = req.getParameter("newContent");
         try {
             Posts post = postsDao.getPostByPostId(postId);
             post = postsDao.updateContent(post,newContent);
-            req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+            req.getRequestDispatcher("findpost").forward(req,resp);
         } catch (SQLException e) {
             e.printStackTrace();
         }

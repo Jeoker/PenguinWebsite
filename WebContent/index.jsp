@@ -68,13 +68,7 @@ if they do, they can view their profile or log out--%>
     </c:choose>
   </div>
 
-
-  <h1 align="center">Test Section</h1><br/>
-  <div align="center"><a href="imagesFromSite">allImages</a></div><br/>
-
-
-
-  <div align="center"><h1>Post</h1></div>
+  <div align="center" style="border-bottom: 1px solid white"><h1>Posts</h1></div><br/>
 <%--all posts--%>
   <%
     PostsDao postsDao = PostsDao.getInstance();

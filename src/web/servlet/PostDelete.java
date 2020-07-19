@@ -59,7 +59,7 @@ public class PostDelete extends HttpServlet {
             }else {
                 messages.put("deletePost","Delete Post Failed");
             }
-            req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+            req.getRequestDispatcher("findpost").forward(req,resp);
         } catch (SQLException e) {
             e.printStackTrace();
         }

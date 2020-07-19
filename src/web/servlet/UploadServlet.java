@@ -125,6 +125,9 @@ public class UploadServlet extends HttpServlet {
         } catch (Exception ex) {
             messages.put("upload","Upload Failed");
         }
+        if(post.getPicture().equals("image/")){
+            post.setPicture(null);
+        }
         Date date = new Date();
         post.setCreated(date);
         HttpSession session = request.getSession();
@@ -134,7 +137,7 @@ public class UploadServlet extends HttpServlet {
         try {
             postsDao.create(post);
             messages.put("NewPost","Post Successfully");
-            request.getRequestDispatcher("/UserMyProfile.jsp").forward(request,response);
+            request.getRequestDispatcher("findpost").forward(request,response);
         } catch (SQLException e) {
             e.printStackTrace();
         }

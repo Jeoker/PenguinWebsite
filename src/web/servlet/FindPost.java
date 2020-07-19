@@ -38,4 +38,18 @@ public class FindPost extends HttpServlet {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Users user = (Users) session.getAttribute("user");
+        List<Posts> postsList = new ArrayList<>();
+        try {
+            postsList = postsDao.getPostsByUserId(user);
+            req.setAttribute("userpost",postsList);
+            req.getRequestDispatcher("/UserMyProfile.jsp").forward(req,resp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
