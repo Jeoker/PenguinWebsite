@@ -46,7 +46,7 @@ public class FindSave extends HttpServlet {
                 if (collection.getPost() != null){
                     Posts post = postsDao.getPostByPostId(collection.getPost().getPostId());
                     postsList.add(post);
-                }else {
+                }else if (collection.getComment() != null){
                     Comments comment = commentsDao.getCommentById(collection.getComment().getCommentId());
                     commentsList.add(comment);
                 }

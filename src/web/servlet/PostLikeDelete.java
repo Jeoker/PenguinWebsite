@@ -41,6 +41,9 @@ public class PostLikeDelete extends HttpServlet {
                 case "PostComment":
                     req.getRequestDispatcher("/PostComment.jsp").forward(req, resp);
                     break;
+                case "FindPost":
+                    req.getRequestDispatcher("findpost").forward(req, resp);
+                    break;
             }
         } catch (SQLException e) {
             e.printStackTrace();

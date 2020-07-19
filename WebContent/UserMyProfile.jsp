@@ -4,6 +4,8 @@
 <%@ page import="web.dal.CollectionsDao" %>
 <%@ page import="web.model.Users" %>
 <%@ page import="web.model.Collections" %>
+<%@ page import="web.model.Likes" %>
+<%@ page import="web.dal.LikesDao" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -177,6 +179,43 @@
                                         <input type="text" name="redirect" value="FindPost" hidden>
                                         <input type="text" name="postId" value="${userSave.post.postId}" hidden>
                                         <div><input type="submit" value="unSave" class="btn btn-primary"></div>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </td>
+                    <td>
+                            <%--Like posts--%>
+                        <%
+                            // get the number of likes for this post
+                            LikesDao likesDao = LikesDao.getInstance();
+                            // get like by userId and PostId
+                            Likes like = null;
+                            try {
+                                int numberOfLikes = likesDao.getLikeNumberByPostId(post.getPostId());
+                                request.setAttribute("numberOfLikes",numberOfLikes);
+
+                                like = likesDao.getLikesByUserIdPostId(user,post);
+                                request.setAttribute("userLike",like);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        %>
+                        <div>
+                            <%--if user has not liked this post, he can choose like; otherwise he can cancel like--%>
+                            <c:choose>
+                                <c:when test="${userLike == null}">
+                                    <form action="postlike" method="post">
+                                        <input type="text" name="redirect" value="FindPost" hidden>
+                                        <input type="text" name="postId" value="${post.postId}" hidden>
+                                        <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-secondary"></div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <form action="postlike delete" method="post">
+                                        <input type="text" name="redirect" value="FindPost" hidden>
+                                        <input type="text" name="likeId" value="${userLike.likeId}" hidden>
+                                        <div><input type="submit" value="${numberOfLikes} Likes" class="btn btn-danger"></div>
                                     </form>
                                 </c:otherwise>
                             </c:choose>
