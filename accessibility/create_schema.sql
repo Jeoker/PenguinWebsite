@@ -304,14 +304,14 @@ CREATE TABLE IF NOT EXISTS `PenguinWeb`.`Detections` (
   `PathOnCloud` VARCHAR(99) NOT NULL,
   `ModelId` INT NOT NULL,
   PRIMARY KEY (`DetectionId`),
-  INDEX `idImage_idx` (`ImageId` ASC) VISIBLE,
-  INDEX `idModel_idx` (`ModelId` ASC) VISIBLE,
-  CONSTRAINT `Detection_Image_fk`
+  INDEX `ImageId1_idx` (`ImageId` ASC),
+  CONSTRAINT `ImageId1`
     FOREIGN KEY (`ImageId`)
     REFERENCES `PenguinWebsite`.`Images` (`ImageId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `Detection_Model_fk`
+  INDEX `ModelId1_idx` (`ModelId` ASC),
+  CONSTRAINT `ModelId1`
     FOREIGN KEY (`ModelId`)
     REFERENCES `PenguinWebsite`.`Models` (`ModelId`)
     ON DELETE NO ACTION
