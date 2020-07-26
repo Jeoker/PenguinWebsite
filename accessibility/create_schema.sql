@@ -307,13 +307,13 @@ CREATE TABLE IF NOT EXISTS `PenguinWeb`.`Detections` (
   INDEX `ImageId1_idx` (`ImageId` ASC),
   CONSTRAINT `ImageId1`
     FOREIGN KEY (`ImageId`)
-    REFERENCES `PenguinWebsite`.`Images` (`ImageId`)
+    REFERENCES `PenguinWeb`.`Images` (`ImageId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   INDEX `ModelId1_idx` (`ModelId` ASC),
   CONSTRAINT `ModelId1`
     FOREIGN KEY (`ModelId`)
-    REFERENCES `PenguinWebsite`.`Models` (`ModelId`)
+    REFERENCES `PenguinWeb`.`Models` (`ModelId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
