@@ -199,12 +199,13 @@ public class ImagesDao {
      * @return list of Images
      * @throws SQLException
      */
-    public List<Images> getImageBySite(int siteId) throws SQLException {
+    public List<Images> getImageBySite(int siteId, int start, int numImages)
+          throws SQLException {
         List<Images> images = new ArrayList<Images>();
         String sql =
               "SELECT ImageId,FileName,FileType,SiteId,Size,MediaLink,TimeStamp," +
                     "Width,Height,Longitude,Latitude,CameraId " +
-                    "FROM Images WHERE SiteId=?;";
+                    "FROM Images WHERE SiteId=? Limit ?,?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -212,6 +213,8 @@ public class ImagesDao {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql);
             ps.setInt(1, siteId);
+            ps.setInt(2, start);
+            ps.setInt(3, numImages);
             rs = ps.executeQuery();
             while(rs.next()) {
                 images.add(genImage(rs));
@@ -232,6 +235,11 @@ public class ImagesDao {
         }
         return images;
     }
+
+    public List<Images> getImageBySite(int siteId) throws SQLException {
+        return getImageBySite(siteId,0,10);
+    }
+
 
     /**
      * Users can get comments by postId
@@ -269,5 +277,34 @@ public class ImagesDao {
             }
         }
         return null;
+    }
+
+    public int countImagesFromSite(int siteId) throws SQLException {
+        String sql = "select count(*) as count from Images where SiteId=?" +
+              " and Size<20";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, siteId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+            if (ps != null)
+                ps.close();
+            if (rs != null)
+                rs.close();
+        }
+        return 0;
     }
 }

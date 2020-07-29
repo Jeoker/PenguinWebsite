@@ -40,6 +40,11 @@
                     <td><c:out value="${site.getSiteId()}" /></td>
                     <td><c:out value="${site.getName()}" /></td>
                     <td><fmt:formatDate value="${site.getDate()}" pattern="yyyy-MM-dd"/></td>
+					<td>
+						<form action="imagesFromSite" method="get">
+							<input type="submit" name="siteId" value="${site.getSiteId()}">
+						</form>
+					</td>
                 </tr>
             </c:forEach>
        </table>

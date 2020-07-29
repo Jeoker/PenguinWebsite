@@ -15,40 +15,74 @@
     <title>All Images</title>
 </head>
 <body>
-    <center>
+<center>
     <h1>All Images</h1>
     <%--<div><a href="/imagesFromSite">Post</a></div><br/>--%>
     <p>
         <span id="successMessage"><b>${messages.result}</b></span>
     </p>
     <h1>Upload new Image</h1><br/>
-    <div><a href="UploadNewImage">Upload</a></div><br/>
+    <div><a href="UploadNewImage">Upload</a></div>
+    <br/>
 
-    <c:forEach items="${siteImages}" var="image" >
-<%--        <c:if test="${image.getImageId() < 0}">--%>
-        <div>
-            <div><c:out value="${image.getFileName()}" /></div>
-            <div><c:out value="${image.getFileType()}" /></div>
-            <div><c:out value="${image.getMediaLink()}" /></div>
-            <div><fmt:formatDate value="${image.getTimestamp()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
-            <div><c:if test="${image.getMediaLink() != null}">
-                <img src="${image.getMediaLink()}" width="300px">
-            </c:if>
-            </div>
+    <div class="container">
+        <c:set var="totImages" value="${requestScope.totImages}"/>
+        <c:set var="imagesPerPage" value="${requestScope.imagesPerPage}"/>
+        <c:set var="totPages" value="${requestScope.totPages}"/>
+        <c:set var="sIdx" value="${requestScope.sIdx}"/>
+        <c:set var="eIdx" value="${requestScope.eIdx}"/>
+        <c:set var="curImages" value="${requestScope.curImages}"/>
+        <c:forEach items="${curImages}" var="image">
             <div>
-                <form action="imagedelete" method="post">
-                    <input type="text" name="imageId" value="${image.getImageId()}" hidden>
-                    <div><input type="submit" value="delete"></div>
-                </form>
-                <form action="updateimage" method="get">
-                    <input type="text" name="imageId" value="${image.getImageId()}" hidden>
-                    <div><input type="submit" value="update"></div>
-                </form>
+                <div><c:out value="${image.getFileName()}"/></div>
+                <div><c:out value="${image.getFileType()}"/></div>
+                <div><fmt:formatDate value="${image.getTimestamp()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
+                <div><c:if test="${image.getMediaLink() != null}">
+                    <c:set var="link" value="${image.getMediaLink()}"/>
+                    <%
+                        String link = (String)pageContext.getAttribute("link");
+                        int s_idx = link.indexOf("/d/")+3;
+                        int e_idx = link.indexOf("/view");
+                        String file_hash = link.substring(s_idx,e_idx);
+                        link = link.substring(0,25) + "thumbnail?id=" + file_hash;
+                    %>
+                    <img src="<%=link%>" width="300px">
+                    <div><c:out value="<%=link%>"/></div>
+                </c:if>
+                </div>
+                <div>
+                    <form action="imagedelete" method="post">
+                        <input type="text" name="imageId" value="${image.getImageId()}" hidden>
+                        <div><input type="submit" value="delete"></div>
+                    </form>
+                    <form action="updateimage" method="get">
+                        <input type="text" name="imageId" value="${image.getImageId()}" hidden>
+                        <div><input type="submit" value="update"></div>
+                    </form>
+                </div>
             </div>
-<%--        </c:if>--%>
-        </div>
-    </c:forEach>
+        </c:forEach>
 
-    </center>
+        <div class="text-center">
+            <nav>
+                <ul class="pagination">
+                    <li><a href="<c:url value="/imagesFromSite?page=1"/>">Front</a></li>
+                    <li><a href="<c:url value="/imagesFromSite?page=${page-1>1?page-1:1}"/>">&laquo;</a></li>
+
+                    <c:forEach begin="1" end="${totalPages}" varStatus="loop">
+                        <c:set var="active" value="${loop.index==page?'active':''}"/>
+                        <li class="${active}"><a
+                                href="<c:url value="/imagesFromSite?page=${loop.index}"/>">${loop.index}</a>
+                        </li>
+                    </c:forEach>
+                    <li>
+                        <a href="<c:url value="/imagesFromSite?page=${page+1<totalPages?page+1:totalPages}"/>">&raquo;</a>
+                    </li>
+                    <li><a href="<c:url value="/imagesFromSite?page=${totalPages}"/>">End</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</center>
 </body>
 </html>
