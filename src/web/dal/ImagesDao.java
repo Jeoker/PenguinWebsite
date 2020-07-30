@@ -16,6 +16,7 @@ public class ImagesDao {
     protected ImagesDao() {
         connectionManager = new ConnectionManager();
     }
+    UAVsDao uavsDao = UAVsDao.getInstance();
     public static ImagesDao getInstance() {
         if(instance == null) {
             instance = new ImagesDao();
@@ -205,7 +206,7 @@ public class ImagesDao {
         String sql =
               "SELECT ImageId,FileName,FileType,SiteId,Size,MediaLink,TimeStamp," +
                     "Width,Height,Longitude,Latitude,CameraId " +
-                    "FROM Images WHERE SiteId=? Limit ?,?;";
+                    "FROM Images WHERE SiteId=? and Size<20 Limit ?,?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -279,6 +280,49 @@ public class ImagesDao {
         return null;
     }
 
+    public Float[] getWeatherForImage(int id) throws SQLException {
+        String sql = "select TmpOut,WindSpeed," +
+              "       abs(round(6367000*2*asin(" +
+              "               sqrt(pow(sin(((Weathers.Latitude * pi())/180" +
+              "                   - (the_image.Latitude*pi())/180)/2),2)" +
+              "                   + cos((the_image.Latitude*pi())/180)" +
+              "                        *cos((Weathers.Latitude*pi())/180)" +
+              "                        *pow(sin(((Weathers.Longitude*pi())/180" +
+              "                           -(the_image.Longitude * pi())/180)/2),2)" +
+              "                   )))) as distance " +
+              "from Weathers, (select * from Images where ImageId = ?) as the_image " +
+              "where the_image.Latitude is not null and the_image.Longitude is not null " +
+              "and the_image.TimeStamp is not null " +
+              "order by distance, abs(the_image.TimeStamp-Weathers.Time) limit 1;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                Float ans[] = {rs.getFloat("TmpOut"),rs.getFloat("WindSpeed")};
+                return(ans);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return null;
+    }
+
     public int countImagesFromSite(int siteId) throws SQLException {
         String sql = "select count(*) as count from Images where SiteId=?" +
               " and Size<20";
@@ -306,5 +350,34 @@ public class ImagesDao {
                 rs.close();
         }
         return 0;
+    }
+
+    public String getUAVInfo(int id)  throws SQLException {
+        String sql = "select UAVs.Model from Images,UAVs " +
+              "where ImageId=? and Images.CameraId=UAVs.CameraId;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Model");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+            if (ps != null)
+                ps.close();
+            if (rs != null)
+                rs.close();
+        }
+        return "";
     }
 }

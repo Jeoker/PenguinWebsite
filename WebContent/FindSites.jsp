@@ -11,24 +11,12 @@
 <title>Find a Site</title>
 </head>
 <body>
-	<form action="findsites" method="post">
-		<h1>Search for a Site by Name</h1>
-		<p>
-			<label for="name">Name</label>
-			<input id="name" name="name" value="${fn:escapeXml(param.name)}">
-		</p>
-		<p>
-			<input type="submit" value="find site">
-			<br/><br/><br/>
-			<span id="successMessage"><b>${messages.success}</b></span>
-		</p>
-	</form>
-	<br/>
-	<div id="SiteCreate"><a href="sitecreate">Create Site</a></div>
-	<div id="SiteDelete"><a href="sitedelete">Delete Site</a></div>
-	<div id="SiteUpdate"><a href="SiteUpdate.jsp">Update Site</a></div>
-	<br/>
-	<h1>Matching Sites</h1>
+<center>
+	<h1>Existing Sites</h1>
+        <div id="SiteCreate"><a href="sitecreate">Create Site</a></div>
+        <div id="SiteDelete"><a href="sitedelete">Delete Site</a></div>
+        <div id="SiteUpdate"><a href="SiteUpdate.jsp">Update Site</a></div>
+        <br/>
         <table border="1">
             <tr>
                 <th>SiteId</th>
@@ -42,11 +30,13 @@
                     <td><fmt:formatDate value="${site.getDate()}" pattern="yyyy-MM-dd"/></td>
 					<td>
 						<form action="imagesFromSite" method="get">
-							<input type="submit" name="siteId" value="${site.getSiteId()}">
+                            <input type='hidden' name='siteId' value="${site.getSiteId()}"/>
+							<input type="submit"  value="Show Images">
 						</form>
 					</td>
                 </tr>
             </c:forEach>
        </table>
+</center>
 </body>
 </html>

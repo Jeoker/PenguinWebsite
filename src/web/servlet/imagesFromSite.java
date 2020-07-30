@@ -1,6 +1,7 @@
 package web.servlet;
 
 import web.dal.ImagesDao;
+import web.dal.UAVsDao;
 import web.model.Images;
 import web.model.Posts;
 import web.model.Sites;

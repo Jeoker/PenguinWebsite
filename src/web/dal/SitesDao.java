@@ -166,8 +166,40 @@ public class SitesDao {
             }
         }
     }
-    
-    
+
+    public List<Sites> getAllSites() throws SQLException {
+        List<Sites> sites = new ArrayList<Sites>();
+        String sql = "SELECT * FROM Sites;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                int siteId = rs.getInt("SiteId");
+                String resultname = rs.getString("Name");
+                Date date = new Date(rs.getTimestamp("Date").getTime());
+                Sites site = new Sites(siteId, resultname, date);
+                sites.add(site);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        }
+        return sites;
+    }
     
     public Sites delete(Sites site) throws SQLException{
         String sql = "DELETE FROM Sites WHERE Name = ? AND Date = ?;";

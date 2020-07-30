@@ -1,4 +1,5 @@
-<%--
+<%@ page import="web.dal.ImagesDao" %>
+<%@ page import="web.dal.UAVsDao" %><%--
   Created by IntelliJ IDEA.
   User: jeoker
   Date: 7/12/20
@@ -32,22 +33,41 @@
         <c:set var="sIdx" value="${requestScope.sIdx}"/>
         <c:set var="eIdx" value="${requestScope.eIdx}"/>
         <c:set var="curImages" value="${requestScope.curImages}"/>
+        <%
+            ImagesDao imageDao = ImagesDao.getInstance();
+        %>
         <c:forEach items="${curImages}" var="image">
             <div>
                 <div><c:out value="${image.getFileName()}"/></div>
-                <div><c:out value="${image.getFileType()}"/></div>
                 <div><fmt:formatDate value="${image.getTimestamp()}" pattern="MM-dd-yyyy hh:mm:sa"/></div>
                 <div><c:if test="${image.getMediaLink() != null}">
                     <c:set var="link" value="${image.getMediaLink()}"/>
+                    <c:set var="id" value="${image.getImageId()}"/>
                     <%
+                        int id = (Integer)pageContext.getAttribute("id");
                         String link = (String)pageContext.getAttribute("link");
                         int s_idx = link.indexOf("/d/")+3;
                         int e_idx = link.indexOf("/view");
                         String file_hash = link.substring(s_idx,e_idx);
                         link = link.substring(0,25) + "thumbnail?id=" + file_hash;
+                        Float weather[] =
+                                imageDao.getWeatherForImage(id);
+                        if (weather == null) {
+                            weather = new Float[2];
+                            weather[0] = 0.f;
+                            weather[1] = 0.f;
+                        }
+                        String UAVModel = imageDao.getUAVInfo(id);
+                        if (UAVModel == null || UAVModel=="") {
+                            UAVModel = "UnKnown";
+                        }
                     %>
                     <img src="<%=link%>" width="300px">
-                    <div><c:out value="<%=link%>"/></div>
+                    <br/>
+                    Real-time Temperature: <%=weather[0]%> &deg;C, Wind Speed:
+                    <%=weather[1]%> km/h
+                    <br/>
+                    UAV Model: <%=UAVModel%>
                 </c:if>
                 </div>
                 <div>

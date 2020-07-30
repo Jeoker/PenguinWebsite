@@ -44,7 +44,7 @@ LOAD DATA INFILE '/home/jeoker/IdeaProjects/PenguinWeb/data/weather.csv'
 
 
 insert into UAVs(Model,CameraId,Weight)
-  values("DJI Mavic Air",1,430),("Phantom 3 Professional",2,1280),("DJI Mavic 2 Pro",3,907);
+  values("DJI Mavic Air",1,430),("Phantom 3 Professional",3,1280),("DJI Mavic 2 Pro",4,907);
 
 insert into Models(Name,CreateTime)
   values("withoutChick0","2020:05:28 12:00:00");

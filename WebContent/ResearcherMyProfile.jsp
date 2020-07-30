@@ -20,7 +20,7 @@
     <div><a href="index.jsp">Home Page</a></div>
     
 <%--Site--%>
-    <div><a href="findsites">Site</a></div>
+    <div><a href="findsites">Management Site</a></div>
 
 <%--view/update user's personal information--%>
     <div><a href="finduser">User Settings</a></div>

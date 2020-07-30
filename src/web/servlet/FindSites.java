@@ -54,23 +54,17 @@ public class FindSites extends HttpServlet {
         List<Sites> sites = new ArrayList<Sites>();
         
         // Retrieve and validate name.
-        // firstname is retrieved from the URL query string.
-        String name = req.getParameter("name");
-        if (name == null || name.trim().isEmpty()) {
-            messages.put("success", "Please enter a valid name.");
-        } else {
         	// Retrieve BlogUsers, and store as a message.
         	try {
-        		sites = sitesDao.getSitesByName(name);
+        		sites = sitesDao.getAllSites();
             } catch (SQLException e) {
     			e.printStackTrace();
     			throw new IOException(e);
             }
-        	messages.put("success", "Displaying results for " + name);
+//        	messages.put("success", "Displaying results for " + name);
         	// Save the previous search term, so it can be used as the default
         	// in the input box when rendering FindUsers.jsp.
-        	messages.put("previousName", name);
-        }
+//        	messages.put("previousName", name);
         req.setAttribute("sites", sites);
         
         req.getRequestDispatcher("/FindSites.jsp").forward(req, resp);

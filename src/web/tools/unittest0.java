@@ -60,6 +60,9 @@ public class unittest0 {
         imagePrinter(imagesDao.getImageByClosestTime(
                                 Timestamp.valueOf("2015-12-23 10:10:10")));
 
+        System.out.println("-----------check the weather for Image 20:");
+        System.out.println(imagesDao.getWeatherForImage(340));
+
         List<Images> imageList = imagesDao.getImageBySite(4);
         System.out.println("Get Images by Site:");
         for (Images item:imageList)

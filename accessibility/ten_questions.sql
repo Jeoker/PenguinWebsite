@@ -1,4 +1,4 @@
-USE PenguinWebsite;
+USE PenguinWeb;
 
 # 1. what is the posted information by the user whose username is JinyuNa?
 select user.username, post.*
@@ -115,4 +115,3 @@ where the_image.Latitude is not null and
       the_image.TimeStamp is not null
 order by distance, abs(the_image.TimeStamp-Weathers.Time)
 limit 1;
-
