@@ -13,7 +13,20 @@
 </head>
 <body>
 <center>
-	<h1>Existing Sites</h1>
+	<form action="findsites" method="post">
+		<h1>Search for a Site by Name</h1>
+		<p>
+			<label for="name">Name</label>
+			<input id="name" name="name" value="${fn:escapeXml(param.name)}">
+		</p>
+		<p>
+			<input type="submit" value="find site">
+			<br/><br/><br/>
+			<span id="successMessage"><b>${messages.success}</b></span>
+		</p>
+	</form>
+	<div><a href="findallsites">Show AllSites</a></div><br/>
+	<br/>
         <div id="SiteCreate"><a href="sitecreate">Create Site</a></div>
         <div id="SiteDelete"><a href="sitedelete">Delete Site</a></div>
         <div id="SiteUpdate"><a href="SiteUpdate.jsp">Update Site</a></div>
