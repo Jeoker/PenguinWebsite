@@ -23,6 +23,7 @@
 			<span id="successMessage"><b>${messages.success}</b></span>
 		</p>
 	</form>
+	<div><a href="findallsites">AllSites</a></div><br/>
 	<br/>
 	<div id="SiteCreate"><a href="sitecreate">Create Site</a></div>
 	<div id="SiteDelete"><a href="sitedelete">Delete Site</a></div>
