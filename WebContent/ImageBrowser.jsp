@@ -12,6 +12,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
 <head>
     <title>All Images</title>
 </head>
@@ -83,22 +84,22 @@
             </div>
         </c:forEach>
 
-        <div class="text-center">
+        <div class="col-sm-10 form-group-lg">
             <nav>
                 <ul class="pagination">
-                    <li><a href="<c:url value="/imagesFromSite?page=1"/>">Front</a></li>
+                    <li><a href="<c:url value="/imagesFromSite?page=1"/>">Front Page</a></li>
                     <li><a href="<c:url value="/imagesFromSite?page=${page-1>1?page-1:1}"/>">&laquo;</a></li>
 
                     <c:forEach begin="1" end="${totalPages}" varStatus="loop">
                         <c:set var="active" value="${loop.index==page?'active':''}"/>
                         <li class="${active}"><a
-                                href="<c:url value="/imagesFromSite?page=${loop.index}"/>">${loop.index}</a>
+                                href="<c:url value="/imagesFromSite?page=${loop.index}"/>">${loop.index}|</a>
                         </li>
                     </c:forEach>
                     <li>
                         <a href="<c:url value="/imagesFromSite?page=${page+1<totalPages?page+1:totalPages}"/>">&raquo;</a>
                     </li>
-                    <li><a href="<c:url value="/imagesFromSite?page=${totalPages}"/>">End</a></li>
+                    <li><a href="<c:url value="/imagesFromSite?page=${totalPages}"/>"> End Page</a></li>
                 </ul>
             </nav>
         </div>
