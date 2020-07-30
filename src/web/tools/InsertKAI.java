@@ -71,10 +71,20 @@ public class InsertKAI {
 
 
 
-
+        /*
         // detection
         Images image1 = imagesDao.create(new Images(501));
         Detections detection1 = new Detections(image1,55,"xxx",model1);
         detectionsDao.create(detection1);
+        */
+        
+        
+        // getAllSites
+        System.out.println("getAllSites: ");
+        List<Sites> sitesList = sitesDao.getAllSites();
+        for(Sites sites2: sitesList){
+        	System.out.println("getAllSites:\nSiteId: "+sites2.getSiteId()
+    	    +" Name: "+sites2.getName()+" Date: "+sites2.getDate());
+        }
     }
 }
