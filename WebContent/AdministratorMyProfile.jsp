@@ -8,6 +8,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
     <title>AdministratorMyProfile</title>
 </head>
@@ -16,13 +18,14 @@
     <p>
         <span id="successMessage"><b>${messages.deleteUser}</b></span>
     </p>
+    <h1>Administrator MyProfile</h1><br/>
     <%--Home Page--%>
-    <div><a href="index.jsp">Home Page</a></div><br/>
+    <div><a href="index.jsp" class="btn btn-info">Home Page</a></div><br/>
 	<%--Site--%>
-    <div><a href="findsites">Management Site</a></div><br/>
+    <div><a href="findsites" class="btn btn-info">Management Site</a></div><br/>
     
     <%--View/Delete Users--%>
-    <div><a href="findusers">View Users</a></div><br/>
+    <div><a href="findusers" class="btn btn-info">View Users</a></div><br/>
     <div>
         <table border="1">
             <c:if test="${allUsers != null}">
@@ -47,7 +50,7 @@
     </div>
 
     <%--View/Delete Posts--%>
-    <div><a href="findposts">View Posts</a></div><br/>
+    <div><a href="findposts" class="btn btn-info">View Posts</a></div><br/>
     <div>
         <table border="1">
             <c:if test="${allPosts != null}">

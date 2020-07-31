@@ -4,6 +4,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
     <title>Researcher MyProfile</title>
 </head>
@@ -17,19 +19,19 @@
     <h1>Researcher MyProfile</h1><br/>
 
 <%--Home Page--%>
-    <div><a href="index.jsp">Home Page</a></div>
-    
+    <div><a href="index.jsp" class="btn btn-info">Home Page</a></div>
+    <br/>
 <%--Site--%>
-    <div><a href="findsites">Management Site</a></div>
-
+    <div><a href="findsites" class="btn btn-info">Management Site</a></div>
+	<br/>
 <%--view/update user's personal information--%>
-    <div><a href="finduser">User Settings</a></div>
-
+    <div><a href="finduser" class="btn btn-info">User Settings</a></div>
+	<br/>
 <%--user can create new posts--%>
-    <div><a href="postcreate">New Post</a></div>
-
+    <div><a href="postcreate" class="btn btn-info">New Post</a></div>
+	<br/>
 <%--user can view their posts--%>
-    <div><a href="findpost">POSTS</a></div>
+    <div><a href="findpost" class="btn btn-info">POSTS</a></div>
     <c:forEach items="${userpost}" var="post" >
         <div>
             <div><c:out value="${post.getTitle()}" /></div>
@@ -53,9 +55,9 @@
             ---------------------------------
         </div>
     </c:forEach>
-
+	<br/>
     <%--user can view their comments--%>
-    <div><a href="findcomment">COMMENTS</a></div>
+    <div><a href="findcomment" class="btn btn-info">COMMENTS</a></div>
     <%--user's comments--%>
     <div>
         <c:forEach items="${userComment}" var="comment">
@@ -74,9 +76,9 @@
             ------------------------------------
         </c:forEach>
     </div>
-
+	<br/>
 <%--user can view their collections--%>
-    <div><a href="findsave">SAVED</a></div>
+    <div><a href="findsave" class="btn btn-info">SAVED</a></div>
 <%--saved posts--%>
     <c:forEach items="${savedPost}" var="post" >
         <div>
