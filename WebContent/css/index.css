@@ -3,7 +3,8 @@
 }
 
 body{
-    background-color: #DAE0E6;
+    background-image: url("penguin.png");
+    opacity: 0.4;
 }
 
 .navbar a {
@@ -64,5 +65,3 @@ body{
     flex-flow: column nowrap;
     border-radius: 4px;
 }
-
-
