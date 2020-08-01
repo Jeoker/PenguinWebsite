@@ -15,7 +15,7 @@
 <body>
 <center>
 	<h1>Update Site</h1>
-	<form action="siteupdate" method="post" style="width: 250px; height: 100px">
+	<form action="siteupdate" method="post" style="width: 250px; height: 200px">
 		<p>
 			<label for="siteId">SiteId</label>
 			<input id="siteId" name="siteId" value="${fn:escapeXml(param.siteId)}" class="form-control">
@@ -27,8 +27,13 @@
 		<p>
 			<input type="submit" value="site update" class="btn btn-primary">
 		</p>
+		<br/>
+		<p>
+			<%--return researcher Myprofile--%>
+            <a href="AdministratorMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>
+		</p>
 	</form>
-	<br/><br/>
+	<br/><br/><br/><br/>
 	<p>
 		<span id="successMessage"><b>${messages.success}</b></span>
 	</p>

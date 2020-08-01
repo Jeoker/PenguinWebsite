@@ -15,7 +15,7 @@
 <body>
 <center>
 	<h1>Delete Site</h1>
-	<form action="sitedelete" method="post" style="width: 250px; height: 100px">
+	<form action="sitedelete" method="post" style="width: 250px; height: 200px">
 		<p>
 			<div <c:if test="${messages.disableSubmit}">style="display:none"</c:if>>
 				<label for="name">Name</label>
@@ -28,6 +28,11 @@
 			<span id="submitButton" <c:if test="${messages.disableSubmit}">style="display:none"</c:if>>
 			<input type="submit" value="site delete" class="btn btn-primary">
 			</span>
+		</p>
+		<br/>
+		<p>
+			<%--return researcher Myprofile--%>
+            <a href="AdministratorMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>
 		</p>
 	</form>
 	<br/><br/>

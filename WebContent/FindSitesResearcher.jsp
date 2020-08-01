@@ -26,7 +26,7 @@
 			<span id="successMessage"><b>${messages.success}</b></span>
 		</p>
 	</form>
-	<div><a href="findallsites" class="btn btn-info">Show AllSites</a></div><br/>
+	<div><a href="findallsitesresearcher" class="btn btn-info">Show AllSites</a></div><br/>
         <br/>
         <br/>
         <table border="1">

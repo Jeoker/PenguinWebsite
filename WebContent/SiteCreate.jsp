@@ -15,7 +15,7 @@
 <body>
 <center>
 	<h1>Create Site</h1>
-	<form action="sitecreate" method="post" style="width: 250px; height: 100px">
+	<form action="sitecreate" method="post" style="width: 250px; height: 200px">
 		<p>
 			<label for="name">Name</label>
 			<input id="name" name="name" value="" class="form-control">
@@ -26,9 +26,15 @@
 		</p>
 		<p>
 			<input type="submit" value="site create" class="btn btn-primary">
+			
+		</p>
+		<br/>
+		<p>
+			<%--return researcher Myprofile--%>
+            <a href="AdministratorMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>
 		</p>
 	</form>
-	<br/><br/>
+	<br/><br/><br/><br/>
 	<p>
 		<span id="successMessage"><b>${messages.success}</b></span>
 	</p>

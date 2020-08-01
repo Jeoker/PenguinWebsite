@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.*;
 
 
-@WebServlet("/findsites")
-public class FindSites extends HttpServlet {
+@WebServlet("/findsitesresearcher")
+public class FindSitesResearcher extends HttpServlet {
 	
 	protected SitesDao sitesDao;
 	
@@ -52,7 +52,7 @@ public class FindSites extends HttpServlet {
 //        	messages.put("previousName", name);
         req.setAttribute("sites", sites);
         
-        req.getRequestDispatcher("/FindSites.jsp").forward(req, resp);
+        req.getRequestDispatcher("/FindSitesResearcher.jsp").forward(req, resp);
 	}
 
 	
@@ -83,6 +83,6 @@ public class FindSites extends HttpServlet {
         }
         req.setAttribute("sites", sites);
         
-        req.getRequestDispatcher("/FindSites.jsp").forward(req, resp);
+        req.getRequestDispatcher("/FindSitesResearcher.jsp").forward(req, resp);
     }
 }
