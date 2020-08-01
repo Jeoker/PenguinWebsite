@@ -13,18 +13,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
     <title>All Images</title>
 </head>
 <body>
 <center>
+    <br/>
+    <br/>
     <h1>All Images</h1>
-    <%--<div><a href="/imagesFromSite">Post</a></div><br/>--%>
+    <br/>
     <p>
         <span id="successMessage"><b>${messages.result}</b></span>
     </p>
-    <h1>Upload new Image</h1><br/>
-    <div><a href="UploadNewImage">Upload</a></div>
+    <div><a href="UploadNewImage" class="btn-group btn-group-lg">Upload New Images</a></div>
     <br/>
 
     <div class="container">
@@ -74,11 +76,11 @@
                 <div>
                     <form action="imagedelete" method="post">
                         <input type="text" name="imageId" value="${image.getImageId()}" hidden>
-                        <div><input type="submit" value="delete"></div>
+                        <div><input type="submit" value="delete" class="btn btn-success"></div>
                     </form>
                     <form action="updateimage" method="get">
                         <input type="text" name="imageId" value="${image.getImageId()}" hidden>
-                        <div><input type="submit" value="update"></div>
+                        <div><input type="submit" value="update" class="btn btn-info"></div>
                     </form>
                 </div>
             </div>

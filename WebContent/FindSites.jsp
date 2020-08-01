@@ -48,12 +48,12 @@
                     
                     <td><a href="siteupdate?siteId=${site.getSiteId()}">UPDATE</a></td>
                     
-					<td>
+					<td><div class="btn-group btn-group-lg">
 						<form action="imagesFromSite" method="get">
                             <input type='hidden' name='siteId' value="${site.getSiteId()}"/>
 							<input type="submit"  value="Show Images">
 						</form>
-					</td>
+                    </div></td>
                 </tr>
             </c:forEach>
        </table>
