@@ -14,8 +14,8 @@
 </head>
 <body>
 <center>
-	<form action="findsites" method="post">
-		<h1>Sites management</h1>
+	<form action="findsitesresearcher" method="post">
+		<h1>Upload Images Into Sites</h1>
 		<p>
 			<label for="name">Name</label>
 			<input id="name" name="name" value="${fn:escapeXml(param.name)}">
@@ -27,12 +27,6 @@
 		</p>
 	</form>
 	<div><a href="findallsites" class="btn btn-info">Show AllSites</a></div><br/>
-	<br/>
-		<div class="btn-group btn-group-lg">
-        <div id="SiteCreate"><a href="sitecreate" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Create Site</a></div>
-        <div id="SiteDelete"><a href="sitedelete" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Delete Site</a></div>
-        <div id="SiteUpdate"><a href="SiteUpdate.jsp" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Update Site</a></div>
-        </div>
         <br/>
         <br/>
         <table border="1">

@@ -22,7 +22,7 @@
     <%--Home Page--%>
     <div><a href="index.jsp" class="btn btn-info">Home Page</a></div><br/>
 	<%--Site--%>
-    <div><a href="findsites" class="btn btn-info">Management Site</a></div><br/>
+    <div><a href="findsites" class="btn btn-info">Sites management</a></div><br/>
     
     <%--View/Delete Users--%>
     <div><a href="findusers" class="btn btn-info">View Users</a></div><br/>

@@ -22,7 +22,7 @@
     <div><a href="index.jsp" class="btn btn-info">Home Page</a></div>
     <br/>
 <%--Site--%>
-    <div><a href="findsites" class="btn btn-info">Management Site</a></div>
+    <div id="FindSitesResearcher"><a href="FindSitesResearcher.jsp" class="btn btn-info">Upload Images Into Sites</a></div>
 	<br/>
 <%--view/update user's personal information--%>
     <div><a href="finduser" class="btn btn-info">User Settings</a></div>
