@@ -7,10 +7,15 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
+<div class="bodystyle"></div>
+
 <head>
     <title>Upload New Image</title>
 </head>
 <body>
+<center>
     <p>
         <span id="successMessage"><b>${messages.success}</b></span>
     </p>
@@ -36,5 +41,6 @@
         </p>
     </form>
     <br/><br/>
+</center>
 </body>
 </html>
