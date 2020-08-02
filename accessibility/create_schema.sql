@@ -376,8 +376,17 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+
+INSERT INTO Users(UserName,Password,Status)
+VALUES('SanZhang','88888','Researcher');
+INSERT INTO Users(UserName,Password,Status)
+VALUES('SiLi','66666','Researcher');
 INSERT INTO Users(UserName, Password, Status)
-VALUES('na','123','Administrator');
+VALUES('researcher1','123','Researcher');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('researcher2','123','Researcher');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('researcher3','123','researcher');
 INSERT INTO Users(UserName, Password, Status)
 VALUES('user1','123','User');
 INSERT INTO Users(UserName, Password, Status)
