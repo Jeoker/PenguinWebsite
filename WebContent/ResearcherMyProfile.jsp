@@ -26,7 +26,7 @@
 	<br/>
 	
 	<%--View/Delete Participates--%>
-    <div><a href="myparticipates" class="btn btn-info">MyParticipates</a></div><br/>
+    <div><a href="myparticipates" class="btn btn-info">MySites</a></div><br/>
     <div>
         <table border="1">
             <c:if test="${MyParticipates != null}">
@@ -34,7 +34,7 @@
                     <td>ParticipateId</td>
                     <td>SiteId</td>
                     <td>ResearcherId</td>
-                    <td>Delete Participate</td>
+                    <td>Delete MySites</td>
                 </tr>
             </c:if>
         <c:forEach items="${MyParticipates}" var="participate">
@@ -43,7 +43,7 @@
                 <td><c:out value="${participate.getSite().getName()}"/></td>
                 <%--<td><c:out value="${participate.getResearcher().getUserId()}"/></td>--%>
                 <td><c:out value="${participate.getSite().getDate()}"/></td>
-				
+				<td><a href="participatedelete?participateId=${participate.getParticipateId()}">DELETE</a></td>
             </tr>
         </c:forEach>
         </table>
@@ -150,6 +150,10 @@
         </c:forEach>
     </div>
 	
+	
+	<%--researcher information--%>
+    <div><a href="findresearcher" class="btn btn-info">Researcher Information</a></div>
+	<br/>
 
 </center>
 </body>

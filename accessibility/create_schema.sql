@@ -387,9 +387,3 @@ INSERT INTO Users(UserName, Password, Status)
 VALUES('researcher2','123','Researcher');
 INSERT INTO Users(UserName, Password, Status)
 VALUES('researcher3','123','researcher');
-INSERT INTO Users(UserName, Password, Status)
-VALUES('user1','123','User');
-INSERT INTO Users(UserName, Password, Status)
-VALUES('user2','123','User');
-INSERT INTO Users(UserName, Password, Status)
-VALUES('user3','123','User');

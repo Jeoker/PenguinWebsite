@@ -140,7 +140,145 @@ public class ResearchersDao extends UsersDao {
     }
     
     
+    public Researchers updateFirstName(Researchers researcher, String newFirstName) throws SQLException{
+        String sql = "UPDATE Researchers SET FirstName = ? WHERE UserId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, newFirstName);
+            ps.setInt(2, researcher.getUserId());
+            ps.executeUpdate();
+
+            // Update the user param before returning to the caller.
+            researcher.setFirstName(newFirstName);
+            return researcher;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+        }
+    }
     
+    public Researchers updateLastName(Researchers researcher, String newLastName) throws SQLException{
+        String sql = "UPDATE Researchers SET LastName = ? WHERE UserId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, newLastName);
+            ps.setInt(2, researcher.getUserId());
+            ps.executeUpdate();
+
+            // Update the user param before returning to the caller.
+            researcher.setLastName(newLastName);
+            return researcher;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+        }
+    }
+    
+    public Researchers updateGender(Researchers researcher, int newGender) throws SQLException{
+        String sql = "UPDATE Researchers SET LastName = ? WHERE UserId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, newGender);
+            ps.setInt(2, researcher.getUserId());
+            ps.executeUpdate();
+
+            // Update the user param before returning to the caller.
+            researcher.setGender(newGender);
+            return researcher;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+        }
+    }
+    
+    public Researchers updateAcademicPaper(Researchers researcher, String newAcademicPaper) throws SQLException{
+        String sql = "UPDATE Researchers SET LastName = ? WHERE UserId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, newAcademicPaper);
+            ps.setInt(2, researcher.getUserId());
+            ps.executeUpdate();
+
+            // Update the user param before returning to the caller.
+            researcher.setAcademicPaper(newAcademicPaper);
+            return researcher;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+        }
+    }
+    
+    public Researchers updateInstitute(Researchers researcher, String newInstitute) throws SQLException{
+        String sql = "UPDATE Researchers SET LastName = ? WHERE UserId = ?;";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectionManager.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, newInstitute);
+            ps.setInt(2, researcher.getUserId());
+            ps.executeUpdate();
+
+            // Update the user param before returning to the caller.
+            researcher.setInstitute(newInstitute);
+            return researcher;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(ps != null) {
+                ps.close();
+            }
+        }
+    }
 
     
 }

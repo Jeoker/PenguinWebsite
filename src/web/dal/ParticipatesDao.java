@@ -122,7 +122,7 @@ public class ParticipatesDao {
             if(rs.next()) {
                 int localparticipateId = rs.getInt("ParticipateId");
                 int siteId = rs.getInt("SiteId");
-                int userId = rs.getInt("UserId");
+                int userId = rs.getInt("ResearcherId");
 
                 Sites site = sitesDao.getSitesBySiteId(siteId);
                 Researchers researcher = researchersDao.getResearchersByUserId(userId);

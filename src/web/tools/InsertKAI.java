@@ -63,10 +63,10 @@ public class InsertKAI {
         // Create Participates
 	    Participates participate1 = new Participates(sites0,researcher1);
 	    participatesDao.create(participate1);
-	    
+	    System.out.println("Create participate1 successful");
 	    List<Participates> participate2 = new ArrayList<>();
 	    participate2 = participatesDao.getParticipatesByUserId(researcher1);
-        
+	    //participatesDao.delete(participate1);
 	    
 	    // model
 	    Timestamp currenttTime = new Timestamp(System.currentTimeMillis());

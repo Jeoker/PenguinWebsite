@@ -30,8 +30,27 @@
 		</p>
 		<br/>
 		<p>
-			<%--return researcher Myprofile--%>
-            <a href="AdministratorMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>
+		<c:choose>
+	      <c:when test="${sessionScope.user != null}">
+	        <div>
+	          <%--according to user's different status, choose different myprofile--%>
+	          <c:choose>
+	            <c:when test="${sessionScope.user.status.name().equals('Administrator')}">
+	              <%--user my profile--%>
+	              <a href="AdministratorMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>
+	            </c:when>
+	            <c:when test="${sessionScope.user.status.name().equals('Researcher')}">
+	              <%--user my profile--%>
+	              <a href="ResearcherMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>
+	            </c:when>
+	          </c:choose>
+			 </div>
+		  </c:when>
+		</c:choose>
+
+		
+			<%--return researcher Myprofile
+            <a href="AdministratorMyProfile.jsp" class="btn btn-info" role="button">My Profile</a>--%>
 		</p>
 	</form>
 	<br/><br/><br/><br/>

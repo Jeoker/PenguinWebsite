@@ -27,6 +27,10 @@
 		</p>
 	</form>
 	<div><a href="findallsitesresearcher" class="btn btn-info">Show AllSites</a></div><br/>
+	<br/>
+		<div class="btn-group btn-group-lg">
+        <div id="SiteCreate"><a href="sitecreate" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Create Site</a></div>
+        </div>
         <br/>
         <br/>
         <table border="1">
