@@ -1,6 +1,8 @@
 package web.servlet;
 
+import web.dal.ResearchersDao;
 import web.dal.UsersDao;
+import web.model.Researchers;
 import web.model.Users;
 
 import javax.servlet.ServletException;
@@ -17,10 +19,12 @@ import java.util.Map;
 @WebServlet("/userlogin")
 public class UserLogin extends HttpServlet {
     protected UsersDao usersDao;
-
+    protected ResearchersDao researchersDao;
+    
     @Override
     public void init() throws ServletException {
         usersDao = UsersDao.getInstance();
+        researchersDao = ResearchersDao.getInstance();
     }
 
     @Override
@@ -58,7 +62,20 @@ public class UserLogin extends HttpServlet {
                     messages.put("login", "Login Successful");
                     // put user into HttpSession for later using
                     HttpSession session = req.getSession();
-                    session.setAttribute("user",resultUser);
+                    if ("User".equals(resultUser.getStatus().toString()))
+                    {
+                    	session.setAttribute("user",resultUser);
+                    }
+                    else if ("Researcher".equals(resultUser.getStatus().toString()))
+                    {
+                    	Researchers researcher = researchersDao.getResearchersByUserId(resultUser.getUserId());
+                    	session.setAttribute("researcher",researcher);
+                    	session.setAttribute("user",resultUser);
+                    }
+                    else if ("Administrator".equals(resultUser.getStatus().toString()))
+                    {
+                    	session.setAttribute("user",resultUser);
+                    }
                     req.getRequestDispatcher("/index.jsp").forward(req,resp);
                 }else {
                     messages.put("login", "Incorrect UserName Or Password Or Status");

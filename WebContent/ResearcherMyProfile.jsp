@@ -150,7 +150,7 @@
         </c:forEach>
     </div>
 	
-	
+	<br/>
 	<%--researcher information--%>
     <div><a href="findresearcher" class="btn btn-info">Researcher Information</a></div>
 	<br/>

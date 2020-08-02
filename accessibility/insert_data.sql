@@ -62,10 +62,12 @@ INSERT INTO Users(UserName,Password,Status)
 VALUES('YangLiu','12345','Administrator');
 INSERT INTO Users(UserName,Password,Status)
 VALUES('XinruiWu','12345','Administrator');
-INSERT INTO Users(UserName,Password,Status)
-VALUES('SanZhang','88888','Researcher');
-INSERT INTO Users(UserName,Password,Status)
-VALUES('SiLi','66666','Researcher');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('user1','123','User');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('user2','123','User');
+INSERT INTO Users(UserName, Password, Status)
+VALUES('user3','123','User');
 
 #INSERT Researchers
 INSERT INTO Researchers(UserId,FirstName,LastName,Gender,institute,AcademicPaper)
@@ -73,8 +75,11 @@ VALUES('1','Heather','Lynch','0','Stony Brook University','Low-temperature fate 
        ('2','Tom','Hart','1','Oxford University','Mitogenomes Uncover Extinct Penguin Taxa and Reveal Island Formation as a Key Driver of Speciation；Comparative population genomics reveals key barriers to dispersal in Southern Ocean penguins'),
 	   ('3','Alexander','Borowicz','1','Stony Brook University','Aerial-trained deep learning networks for surveying cetaceans from satellite imagery；Multi-modal survey of Adélie penguin mega-colonies reveals the Danger Islands as a seabird hotspot. Scientific Reports 3926'),
        ('4','A. Raya','Rey','1','National Scientific and Technical Research Council','Cryptic speciation in gentoo penguins is driven by geographic isolation and regional marine conditions: Unforeseen vulnerabilities to global change'),
-       ('5','Casey','Youngflesh','1','University of California,Los Angeles','Multi-modal survey of Adélie penguin mega-colonies reveals the Danger Islands as a seabird hotspot;Circumpolar analysis of the Adélie Penguin reveals the importance of environmental variability in phenological mismatch');
-
+       ('5','Casey','Youngflesh','1','University of California,Los Angeles','Multi-modal survey of Adélie penguin mega-colonies reveals the Danger Islands as a seabird hotspot;Circumpolar analysis of the Adélie Penguin reveals the importance of environmental variability in phenological mismatch'),
+	   ('6','Jinyu','Na','0','Northeastern University',''),
+       ('7','Kai','He','0','Northeastern University',''),
+	   ('8','Yang','Liu','0','Northeastern University',''),
+       ('9','Xinrui','Wu','1','Northeastern University','');
 
 #INSERT Posts
 INSERT INTO Posts(UserId,Title,Content,Published)
