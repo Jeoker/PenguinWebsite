@@ -17,8 +17,7 @@
 	<h1>Update Site</h1>
 	<form action="siteupdate" method="post" style="width: 250px; height: 200px">
 		<p>
-			<label for="siteId">SiteId</label>
-			<input id="siteId" name="siteId" value="${fn:escapeXml(param.siteId)}" class="form-control">
+			<input id="siteId" name="siteId" value="${site.getSiteId()}" class="form-control" type='hidden'>
 		</p>
 		<p>
 			<label for="name">New Name</label>

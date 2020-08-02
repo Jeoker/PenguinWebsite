@@ -59,7 +59,7 @@ public class UserCreate extends HttpServlet {
                     // create user
                     usersDao.create(user);
                 }else if ("Researcher".equals(status)){
-                    Researchers researcher = new Researchers(userName,password,Users.Status.valueOf(status),null,null,true,null,null);
+                    Researchers researcher = new Researchers(userName,password,Users.Status.valueOf(status),null,null,0,null,null);
                     researchersDao.create(researcher);
                 }
 

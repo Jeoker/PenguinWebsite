@@ -74,7 +74,7 @@ public class Inserter {
         System.out.println("Test Researchers");
         System.out.println("-------------------------------");
         Researchers researcher1 = new Researchers("jordan","123",Users.Status.valueOf("Researcher"),
-                "smith","jordan",true,"paper1","institute1");
+                "smith","jordan",1,"paper1","institute1");
         researchersDao.create(researcher1);
         System.out.println("Create researchers successful");
 

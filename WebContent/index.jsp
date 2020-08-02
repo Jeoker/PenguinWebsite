@@ -67,8 +67,7 @@ if they do, they can view their profile or log out--%>
       </c:otherwise>
     </c:choose>
   </div>
-<h1>Test Section</h1><br/>
-<div><a href="imagesFromSite">allImages</a></div><br/>
+
   <div align="center" style="border-bottom: 1px solid white">
     <h1>Posts</h1>
     <c:if test="${requestScope.postsOrder == null || requestScope.postsOrder == 'all'}">

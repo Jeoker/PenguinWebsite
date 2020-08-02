@@ -3,7 +3,8 @@
 }
 
 body{
-    background-color: #DAE0E6;
+    background-size:50%;
+    background-image: url("penguin.png");
 }
 
 .navbar a {
@@ -28,8 +29,13 @@ body{
 }
 
 .post {
+<<<<<<< HEAD
     margin-left: 10cm;
     margin-right: 10cm;
+=======
+    margin-left: 25%;
+    margin-right: 25%;
+>>>>>>> 20c5e7ff6c3d362994e44839ee4195a03fc54248
     border: groove ;
 }
 
@@ -64,5 +70,3 @@ body{
     flex-flow: column nowrap;
     border-radius: 4px;
 }
-
-

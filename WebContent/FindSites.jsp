@@ -31,7 +31,6 @@
 		<div class="btn-group btn-group-lg">
         <div id="SiteCreate"><a href="sitecreate" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Create Site</a></div>
         <div id="SiteDelete"><a href="sitedelete" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Delete Site</a></div>
-        <div id="SiteUpdate"><a href="SiteUpdate.jsp" class="btn btn-primary" style="width: 120px;height: 40px;margin-left: 20px">Update Site</a></div>
         </div>
         <br/>
         <br/>
@@ -46,12 +45,15 @@
                     <td><c:out value="${site.getSiteId()}" /></td>
                     <td><c:out value="${site.getName()}" /></td>
                     <td><fmt:formatDate value="${site.getDate()}" pattern="yyyy-MM-dd"/></td>
-					<td>
+                    
+                    <td><a href="siteupdate?siteId=${site.getSiteId()}">UPDATE</a></td>
+                    
+					<td><div class="btn-group btn-group-lg">
 						<form action="imagesFromSite" method="get">
                             <input type='hidden' name='siteId' value="${site.getSiteId()}"/>
 							<input type="submit"  value="Show Images">
 						</form>
-					</td>
+                    </div></td>
                 </tr>
             </c:forEach>
        </table>

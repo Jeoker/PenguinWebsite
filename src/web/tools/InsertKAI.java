@@ -6,6 +6,7 @@ import web.model.*;
 import javax.naming.ldap.LdapContext;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 //import java.util.Date;
 import java.util.List;
 import java.sql.*;
@@ -55,13 +56,16 @@ public class InsertKAI {
         System.out.println("Test Researchers");
         System.out.println("-------------------------------");
         Researchers researcher1 = new Researchers("jordan","123",Users.Status.valueOf("Researcher"),
-                "smith","jordan",true,"paper1","institute1");
+                "smith","jordan",1,"paper1","institute1");
         researchersDao.create(researcher1);
         System.out.println("Create researchers successful");
 	    
         // Create Participates
 	    Participates participate1 = new Participates(sites0,researcher1);
 	    participatesDao.create(participate1);
+	    
+	    List<Participates> participate2 = new ArrayList<>();
+	    participate2 = participatesDao.getParticipatesByUserId(researcher1);
         
 	    
 	    // model

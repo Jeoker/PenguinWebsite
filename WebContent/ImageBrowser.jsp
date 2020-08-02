@@ -13,18 +13,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
 <head>
     <title>All Images</title>
 </head>
 <body>
 <center>
+    <br/>
+    <br/>
     <h1>All Images</h1>
-    <%--<div><a href="/imagesFromSite">Post</a></div><br/>--%>
+    <br/>
     <p>
         <span id="successMessage"><b>${messages.result}</b></span>
     </p>
-    <h1>Upload new Image</h1><br/>
-    <div><a href="UploadNewImage">Upload</a></div>
+    <div><a href="UploadNewImage" class="btn-group btn-group-lg">Upload New Images</a></div>
     <br/>
 
     <div class="container">
@@ -63,7 +65,7 @@
                             UAVModel = "UnKnown";
                         }
                     %>
-                    <img src="<%=link%>" width="300px">
+                    <img src="<%=link%>" width="400px">
                     <br/>
                     Real-time Temperature: <%=weather[0]%> &deg;C, Wind Speed:
                     <%=weather[1]%> km/h
@@ -74,36 +76,50 @@
                 <div>
                     <form action="imagedelete" method="post">
                         <input type="text" name="imageId" value="${image.getImageId()}" hidden>
-                        <div><input type="submit" value="delete"></div>
+                        <div><input type="submit" value="delete" class="btn btn-success"></div>
                     </form>
                     <form action="updateimage" method="get">
                         <input type="text" name="imageId" value="${image.getImageId()}" hidden>
-                        <div><input type="submit" value="update"></div>
+                        <div><input type="submit" value="update" class="btn btn-info"></div>
                     </form>
                 </div>
             </div>
         </c:forEach>
 
-        <div class="col-sm-10 form-group-lg">
-            <nav>
-                <ul class="pagination">
-                    <li><a href="<c:url value="/imagesFromSite?page=1"/>">Front Page</a></li>
-                    <li><a href="<c:url value="/imagesFromSite?page=${page-1>1?page-1:1}"/>">&laquo;</a></li>
-
-                    <c:forEach begin="1" end="${totalPages}" varStatus="loop">
-                        <c:set var="active" value="${loop.index==page?'active':''}"/>
-                        <li class="${active}"><a
-                                href="<c:url value="/imagesFromSite?page=${loop.index}"/>">${loop.index}|</a>
-                        </li>
-                    </c:forEach>
-                    <li>
-                        <a href="<c:url value="/imagesFromSite?page=${page+1<totalPages?page+1:totalPages}"/>">&raquo;</a>
+        <div class="row justify-content-center">
+            <div><nav><ul class="pagination">
+                <li class="page-item ${page==1?'disabled':''}"><a class="page-link"
+                                                                  href="<c:url value="/imagesFromSite?page=${page-1>1?page-1:1}"/>">Previous</a>
+                </li>
+                <c:if test="${page!=1}">
+                    <li class="page-item">
+                        <a class="page-link" href="<c:url value="/imagesFromSite?page=1"/>">1</a>
                     </li>
-                    <li><a href="<c:url value="/imagesFromSite?page=${totalPages}"/>"> End Page</a></li>
-                </ul>
-            </nav>
+                </c:if>
+                <c:if test="${page>2}">
+                    <li class="page-item disabled">
+                        <a class="page-link">...</a>
+                    </li>
+                </c:if>
+                <li class="page-item active">
+                    <a class="page-link" href="<c:url value="/imagesFromSite?page=${page}"/>">${page}</a>
+                </li>
+                <c:if test="${totalPages-page>1}">
+                    <li class="page-item disabled">
+                        <a class="page-link">...</a>
+                    </li>
+                </c:if>
+                <c:if test="${page!=totalPages}">
+                    <li class="page-item">
+                        <a class="page-link" href="<c:url value="/imagesFromSite?page=${totalPages}"/>">${totalPages}</a>
+                    </li>
+                </c:if>
+
+                <li class="page-item ${page==totalPages?'disabled':''}">
+                    <a class="page-link" href="<c:url value="/imagesFromSite?page=${page+1<totalPages?page+1:totalPages}"/>">Next</a>
+                </li>
+            </ul></nav></div>
         </div>
-    </div>
 </center>
 </body>
 </html>

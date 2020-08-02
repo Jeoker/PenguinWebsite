@@ -81,7 +81,7 @@ public class SiteUpdate extends HttpServlet {
         	            messages.put("success", "Please enter a valid Name.");
         	        } else {
         	        	site = sitesDao.updateAbout(site, newAbout);
-        	        	messages.put("success", "Successfully updated " + siteId);
+        	        	messages.put("success", "Successfully updated " + newAbout);
         	        }
         		}
         		req.setAttribute("site", site);
