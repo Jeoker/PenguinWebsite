@@ -34,7 +34,7 @@ if they do, they can view their profile or log out--%>
     <c:choose>
       <c:when test="${sessionScope.user != null}">
         <div>
-            <%--according to user's different status, choose different myprofile--%>
+          <%--according to user's different status, choose different myprofile--%>
           <c:choose>
             <c:when test="${sessionScope.user.status.name().equals('User')}">
               <%--user my profile--%>

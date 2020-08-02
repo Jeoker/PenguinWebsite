@@ -1,6 +1,8 @@
 package web.servlet;
 
+import web.dal.ResearchersDao;
 import web.dal.UsersDao;
+import web.model.Researchers;
 import web.model.Users;
 
 import javax.servlet.ServletException;
@@ -16,10 +18,12 @@ import java.util.Map;
 @WebServlet("/usercreate")
 public class UserCreate extends HttpServlet {
     protected UsersDao usersDao;
+    protected ResearchersDao researchersDao;
 
     @Override
     public void init() throws ServletException {
         usersDao = UsersDao.getInstance();
+        researchersDao = ResearchersDao.getInstance();
     }
 
     @Override
@@ -50,9 +54,15 @@ public class UserCreate extends HttpServlet {
         }else {
             String status = req.getParameter("status");
             try {
-                Users user = new Users(userName,password,Users.Status.valueOf(status));
-                // create user
-                usersDao.create(user);
+                if("User".equals(status)){
+                    Users user = new Users(userName,password,Users.Status.valueOf(status));
+                    // create user
+                    usersDao.create(user);
+                }else if ("Researcher".equals(status)){
+                    Researchers researcher = new Researchers(userName,password,Users.Status.valueOf(status),null,null,true,null,null);
+                    researchersDao.create(researcher);
+                }
+
                 messages.put("signUp", "Sign Up Successful");
                 req.getRequestDispatcher("/index.jsp").forward(req,resp);
             } catch (SQLException e) {
