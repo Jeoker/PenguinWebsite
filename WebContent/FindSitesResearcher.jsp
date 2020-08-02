@@ -32,14 +32,16 @@
         <table border="1">
             <tr>
                 <th>SiteId</th>
-                <th>Name</th>
+                <th>Site Name</th>
                 <th>Date</th>
+                
             </tr>
             <c:forEach items="${sites}" var="site" >
                 <tr>
                     <td><c:out value="${site.getSiteId()}" /></td>
                     <td><c:out value="${site.getName()}" /></td>
                     <td><fmt:formatDate value="${site.getDate()}" pattern="yyyy-MM-dd"/></td>
+                    
 					<td>
 						<form action="imagesFromSite" method="get">
                             <input type='hidden' name='siteId' value="${site.getSiteId()}"/>

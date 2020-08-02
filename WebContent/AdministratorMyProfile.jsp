@@ -83,28 +83,6 @@
     </div>
 	
 	
-	<%--View/Delete Participates--%>
-    <div><a href="myparticipates" class="btn btn-info">MyParticipates</a></div><br/>
-    <div>
-        <table border="1">
-            <c:if test="${allUsers != null}">
-                <tr>
-                    <td>ParticipateId</td>
-                    <td>SiteId</td>
-                    <td>ResearcherId</td>
-                    <td>Delete Participate</td>
-                </tr>
-            </c:if>
-        <c:forEach items="${MyParticipates}" var="participate">
-            <tr>
-                <td><c:out value="${participate.getParticipateId()}"/></td>
-                <td><c:out value="${participate.getSite().getSiteId()}"/></td>
-                <td><c:out value="${participate.getResearcher().getUserId()}"/></td>
-               
-            </tr>
-        </c:forEach>
-        </table>
-    </div>
 	
 
 </center>

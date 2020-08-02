@@ -40,7 +40,7 @@ public class MyParticipates extends HttpServlet {
         	Researchers researcher = researchersDao.getResearchersByUserId(userId);
         	participates = participatesDao.getParticipatesByUserId(researcher);
             req.setAttribute("MyParticipates",participates);
-            req.getRequestDispatcher("/AdministratorMyProfile.jsp").forward(req,resp);
+            req.getRequestDispatcher("/ResearcherMyProfile.jsp").forward(req,resp);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -24,6 +24,32 @@
 <%--Site--%>
     <div id="FindSitesResearcher"><a href="FindSitesResearcher.jsp" class="btn btn-info">Upload Images Into Sites</a></div>
 	<br/>
+	
+	<%--View/Delete Participates--%>
+    <div><a href="myparticipates" class="btn btn-info">MyParticipates</a></div><br/>
+    <div>
+        <table border="1">
+            <c:if test="${MyParticipates != null}">
+                <tr>
+                    <td>ParticipateId</td>
+                    <td>SiteId</td>
+                    <td>ResearcherId</td>
+                    <td>Delete Participate</td>
+                </tr>
+            </c:if>
+        <c:forEach items="${MyParticipates}" var="participate">
+            <tr>
+                <td><c:out value="${participate.getParticipateId()}"/></td>
+                <td><c:out value="${participate.getSite().getName()}"/></td>
+                <%--<td><c:out value="${participate.getResearcher().getUserId()}"/></td>--%>
+                <td><c:out value="${participate.getSite().getDate()}"/></td>
+				
+            </tr>
+        </c:forEach>
+        </table>
+    </div>
+	<br/>
+	
 <%--view/update user's personal information--%>
     <div><a href="finduser" class="btn btn-info">User Settings</a></div>
 	<br/>
@@ -123,7 +149,7 @@
             ------------------------------------
         </c:forEach>
     </div>
-
+	
 
 </center>
 </body>
