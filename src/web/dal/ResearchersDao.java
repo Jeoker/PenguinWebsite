@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResearchersDao extends UsersDao {
     private static ResearchersDao instance = null;
@@ -44,7 +46,7 @@ public class ResearchersDao extends UsersDao {
             ps.setInt(1, researcher.getUserId());
             ps.setString(2,researcher.getFirstName());
             ps.setString(3,researcher.getLastName());
-            ps.setBoolean(4,researcher.isGender());
+            ps.setInt(4,researcher.getGender());
             ps.setString(5,researcher.getAcademicPaper());
             ps.setString(6,researcher.getInstitute());
             ps.executeUpdate();
@@ -99,7 +101,7 @@ public class ResearchersDao extends UsersDao {
 
     public Researchers getResearchersByUserId(int userId) throws SQLException{
         String sql = "SELECT UserId, FirstName, LastName, Gender, AcademicPaper, Institute" +
-                " FROM Sites WHERE UserId = ?;";
+                " FROM Researchers WHERE UserId = ?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -112,12 +114,12 @@ public class ResearchersDao extends UsersDao {
                 int localuserId = rs.getInt("UserId");
                 String firstName = rs.getString("FirstName");
                 String lastName = rs.getString("LastName");
-                boolean isGender = rs.getBoolean("IsGender");
+                int Gender = rs.getInt("Gender");
                 String academicPaper = rs.getString("AcademicPaper");
                 String institute = rs.getString("Institute");
                 
 
-                Researchers researcher = new Researchers(localuserId, firstName, lastName, isGender, academicPaper, institute);
+                Researchers researcher = new Researchers(localuserId, firstName, lastName, Gender, academicPaper, institute);
                 return researcher;
             }
         } catch (SQLException e) {
@@ -137,5 +139,8 @@ public class ResearchersDao extends UsersDao {
         return null;
     }
     
+    
+    
+
     
 }

@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @WebServlet("/sitecreate")
@@ -69,6 +70,15 @@ public class SiteCreate extends HttpServlet {
 	        	// Exercise: parse the input for StatusLevel.
 	        	Sites site = new Sites(name, date);
 	        	site = sitesDao.create(site);
+	        	
+	        	HttpSession session = req.getSession();
+	        	Users user = (Users) session.getAttribute("user");
+	        	int userId = user.getUserId();
+	        	ResearchersDao researchersDao = ResearchersDao.getInstance();
+	        	Researchers researcher = researchersDao.getResearchersByUserId(userId);
+	        	Participates participate = new Participates(site, researcher);
+	        	ParticipatesDao participatesDao = ParticipatesDao.getInstance();
+	        	participate = participatesDao.create(participate);
 	        	messages.put("success", "Successfully created " + name);
 	        } catch (SQLException e) {
 				e.printStackTrace();

@@ -106,7 +106,7 @@ public class ParticipatesDao {
      */
     public Participates getParticipateById(int participateId) throws SQLException {
         String sql =
-                "SELECT ParticipateId,SiteId,UserId " +
+                "SELECT ParticipateId,SiteId,ResearcherId " +
                         "FROM Participates " +
                         "WHERE ParticipateId=?;";
         Connection connection = null;
@@ -155,15 +155,16 @@ public class ParticipatesDao {
     public List<Participates> getParticipatesByUserId(Researchers researcher) throws SQLException {
         List<Participates> participates = new ArrayList<Participates>();
         String sql =
-                "SELECT ParticipateId,SiteId,UserId " +
+                "SELECT ParticipateId,SiteId,ResearcherId " +
                         "FROM Participates " +
-                        "WHERE UserId=?;";
+                        "WHERE ResearcherId=?;";
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             connection = connectionManager.getConnection();
             ps = connection.prepareStatement(sql);
+            System.out.println(researcher.getUserId());
             ps.setInt(1,researcher.getUserId());
             rs = ps.executeQuery();
             SitesDao sitesDao = SitesDao.getInstance();
@@ -206,7 +207,7 @@ public class ParticipatesDao {
     public List<Participates> getAllParticipates() throws SQLException {
         List<Participates> participates = new ArrayList<Participates>();
         String sql =
-                "SELECT ParticipateId,SiteId,UserId " +
+                "SELECT ParticipateId,SiteId,ResearcherId " +
                         "FROM Participates; " ;                    
         Connection connection = null;
         PreparedStatement ps = null;
@@ -242,8 +243,9 @@ public class ParticipatesDao {
             }
         }
         return participates;
-    
-    
-    
+        
     }
+    
+
+    
 }

@@ -3,11 +3,11 @@ package web.model;
 public class Researchers extends Users{
     protected String firstName;
     protected String lastName;
-    protected boolean gender;
+    protected int gender;
     protected String academicPaper;
     protected String institute;
 
-    public Researchers(int userId, String userName, String password, Status status, String firstName, String lastName, boolean gender, String academicPaper, String institute) {
+    public Researchers(int userId, String userName, String password, Status status, String firstName, String lastName, int gender, String academicPaper, String institute) {
         super(userId, userName, password, status);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -16,7 +16,7 @@ public class Researchers extends Users{
         this.institute = institute;
     }
 
-    public Researchers(int userId, String firstName, String lastName, boolean gender, String academicPaper, String institute) {
+    public Researchers(int userId, String firstName, String lastName, int gender, String academicPaper, String institute) {
         super(userId);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,7 +25,7 @@ public class Researchers extends Users{
         this.institute = institute;
     }
 
-    public Researchers(String userName, String password, Status status, String firstName, String lastName, boolean gender, String academicPaper, String institute) {
+    public Researchers(String userName, String password, Status status, String firstName, String lastName, int gender, String academicPaper, String institute) {
         super(userName, password, status);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,11 +50,11 @@ public class Researchers extends Users{
         this.lastName = lastName;
     }
 
-    public boolean isGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
