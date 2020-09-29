@@ -49,10 +49,12 @@
                     <%
                         int id = (Integer)pageContext.getAttribute("id");
                         String link = (String)pageContext.getAttribute("link");
-                        int s_idx = link.indexOf("/d/")+3;
-                        int e_idx = link.indexOf("/view");
-                        String file_hash = link.substring(s_idx,e_idx);
-                        link = link.substring(0,25) + "thumbnail?id=" + file_hash;
+                        if (link.startsWith("https")) {
+                            int s_idx = link.indexOf("/d/") + 3;
+                            int e_idx = link.indexOf("/view");
+                            String file_hash = link.substring(s_idx, e_idx);
+                            link = link.substring(0, 25) + "thumbnail?id=" + file_hash;
+                        }
                         Float weather[] =
                                 imageDao.getWeatherForImage(id);
                         if (weather == null) {

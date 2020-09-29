@@ -108,10 +108,14 @@ select WeatherId, Time as weather_time, Weathers.Longitude as weather_long,
                           *cos((Weathers.Latitude*pi())/180)
                           *pow(sin(((Weathers.Longitude*pi())/180
                                         -(the_image.Longitude * pi())/180)/2),2)
-               )))) as distance
+               )))) as distance # calculate euclidean distance from longitude & latitude
 from Weathers, (select * from Images where ImageId = 5410) as the_image
 where the_image.Latitude is not null and
       the_image.Longitude is not null and
       the_image.TimeStamp is not null
 order by distance, abs(the_image.TimeStamp-Weathers.Time)
 limit 1;
+
+select * from Images limit 1;
+select FileName,FileType,TimeStamp,Longitude,Latitude from Images where ImageId=5410;
+select TmpOut,Time,Longitude,Latitude from Weathers where Time BETWEEN '2015-12-09 16:10:00' AND '2015-12-09 16:50:00';
